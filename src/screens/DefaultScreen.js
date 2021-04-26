@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
-import DefaultCard from '../components/cards/DefaultCard';
+import AuthCard from '../components/cards/AuthCard';
 
 const background = require('../../assets/images/background.png');
 
@@ -52,9 +52,9 @@ export default function DefaultScreen() {
   return (
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
-        <DefaultCard>
+        <AuthCard>
           <Text style={styles.title}>{title}</Text>
-        </DefaultCard>
+        </AuthCard>
       </ImageBackground>
     </View>
   );

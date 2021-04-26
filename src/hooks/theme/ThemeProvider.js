@@ -17,8 +17,8 @@ export default function ThemeProvider({children}) {
   const colors = {
     black: 'rgba(20, 20, 20, 1)',
     darkPink: 'rgba(35, 0, 0, 0.9)',
-    graphQLPink: 'rgba(228, 52, 170, 1)',
-    limeGreen: 'rgba(0, 200, 0)',
+    pink: 'rgba(228, 52, 170, 1)',
+    limeGreen: 'rgba(0, 200, 0, 1)',
     white: 'rgba(255, 255, 255, 1)',
   };
 
@@ -30,9 +30,24 @@ export default function ThemeProvider({children}) {
   };
 
   const textStyles = {
+    bold16_limeGreen: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(16),
+      color: colors.limeGreen,
+    },
     bold30_white: {
       fontFamily: fonts.bold,
       fontSize: fontSize(30),
+      color: colors.white,
+    },
+    regular16_pink: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(16),
+      color: colors.pink,
+    },
+    regular16_white: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(16),
       color: colors.white,
     },
   };

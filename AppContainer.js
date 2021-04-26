@@ -1,6 +1,6 @@
 import React from 'react';
 import AppStack from './src/navigation/AppStack';
-import DefaultScreen from './src/screens/DefaultScreen';
+import LoginScreen from './src/screens/auth/LoginScreen';
 // import TabContainer from './routes/TabContainer';
 // import AuthContainer from './routes/AuthContainer';
 // import useLoading from './hooks/loading/useLoading';
@@ -12,7 +12,7 @@ export default function AppContainer() {
   return (
     <>
       <AppStack.Navigator headerMode="screen">
-        <AppStack.Screen name="Default" component={DefaultScreen} />
+        <AppStack.Screen name="Login" component={LoginScreen} />
       </AppStack.Navigator>
       {/* {loading && LoadingView()} */}
     </>

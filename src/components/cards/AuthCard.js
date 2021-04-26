@@ -5,8 +5,8 @@ import {ScaleHook} from 'react-native-design-to-component';
 
 export default function DefaultComponent({children}) {
   // ** ** ** ** ** HOOKS ** ** ** ** **
-  const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {colors} = useTheme();
+  const {getWidth, radius} = ScaleHook();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -17,6 +17,7 @@ export default function DefaultComponent({children}) {
       borderRadius: radius(20),
       borderColor: colors.white,
       borderWidth: getWidth(0.5),
+      alignItems: 'center',
     },
   });
 

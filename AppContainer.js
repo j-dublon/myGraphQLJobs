@@ -1,6 +1,6 @@
 import React from 'react';
 import AppStack from './src/navigation/AppStack';
-import ForgotPassword from './src/screens/auth/ForgotPassword';
+import HomeScreen from './src/screens/home/HomeScreen';
 // import TabContainer from './routes/TabContainer';
 // import AuthContainer from './routes/AuthContainer';
 // import useLoading from './hooks/loading/useLoading';
@@ -12,7 +12,11 @@ export default function AppContainer() {
   return (
     <>
       <AppStack.Navigator headerMode="screen">
-        <AppStack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <AppStack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
+          options={{headerShown: false}}
+        />
       </AppStack.Navigator>
       {/* {loading && LoadingView()} */}
     </>

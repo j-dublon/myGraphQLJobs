@@ -97,7 +97,7 @@ export default function RegisterScreen() {
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
-          <NavigationHeader title="Register" />
+          <NavigationHeader title="Register" back={true} onCard={true} />
           <Spacer height={70} />
           <TextInput
             style={styles.input}

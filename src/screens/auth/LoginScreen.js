@@ -13,6 +13,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import AuthCard from '../../components/cards/AuthCard';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
+import NavigationHeader from '../../components/headers/NavigationHeader';
 
 const background = require('../../../assets/images/background.png');
 
@@ -87,7 +88,11 @@ export default function LoginScreen() {
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
-          <Text style={styles.title}>My GraphQL Jobs</Text>
+          <NavigationHeader
+            title="MY GraphQL jobs"
+            back={false}
+            onCard={true}
+          />
           <Spacer height={70} />
           <TextInput
             style={styles.input}

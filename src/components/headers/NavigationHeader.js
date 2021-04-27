@@ -5,7 +5,7 @@ import {faBackward} from '@fortawesome/free-solid-svg-icons';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 
-export default function NavigationHeader({title}) {
+export default function NavigationHeader({title, back, onCard}) {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -15,8 +15,10 @@ export default function NavigationHeader({title}) {
     container: {
       flexDirection: 'row',
       width: '100%',
+      height: onCard ? undefined : getHeight(80),
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: 'transparent',
     },
     iconContainer: {
       position: 'absolute',
@@ -37,13 +39,15 @@ export default function NavigationHeader({title}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity
-          style={styles.touch}
-          onPress={() => console.log('back')}>
-          <FontAwesomeIcon icon={faBackward} style={styles.icon} size={28} />
-        </TouchableOpacity>
-      </View>
+      {back === true && (
+        <View style={styles.iconContainer}>
+          <TouchableOpacity
+            style={styles.touch}
+            onPress={() => console.log('back')}>
+            <FontAwesomeIcon icon={faBackward} style={styles.icon} size={28} />
+          </TouchableOpacity>
+        </View>
+      )}
       <Text style={styles.text}>{title}</Text>
     </View>
   );

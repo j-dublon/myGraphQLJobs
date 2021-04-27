@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 
-export default function DefaultComponent({children}) {
+export default function AuthCard({children}) {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors} = useTheme();
   const {getWidth, radius} = ScaleHook();

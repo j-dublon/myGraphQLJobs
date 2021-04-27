@@ -77,7 +77,7 @@ export default function ForgotPassword() {
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
-          <NavigationHeader title="Email me" />
+          <NavigationHeader title="Email me" back={true} onCard={true} />
           <Spacer height={70} />
           <TextInput
             style={styles.input}

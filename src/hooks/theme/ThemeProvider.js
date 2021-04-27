@@ -35,6 +35,21 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(16),
       color: colors.limeGreen,
     },
+    bold16_white: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(16),
+      color: colors.white,
+    },
+    bold20_limeGreen: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(20),
+      color: colors.limeGreen,
+    },
+    bold20_white: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(20),
+      color: colors.white,
+    },
     bold30_white: {
       fontFamily: fonts.bold,
       fontSize: fontSize(30),

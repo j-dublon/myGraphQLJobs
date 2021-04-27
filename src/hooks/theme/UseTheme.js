@@ -14,9 +14,7 @@ export default function useTheme() {
   const context = React.useContext(ThemeContext);
 
   if (context === undefined) {
-    throw new Error(
-      '`ThemeHook` hook must be used within a `ThemeProvider` component',
-    );
+    throw new Error('Please use a `ThemeProvider` in your App.js file');
   }
   return context;
 }

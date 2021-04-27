@@ -5,7 +5,7 @@ import {
   Text,
   ImageBackground,
   TextInput,
-  TouchableOpacity,
+  Switch,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -13,18 +13,21 @@ import {ScaleHook} from 'react-native-design-to-component';
 import AuthCard from '../../components/cards/AuthCard';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
+import NavigationHeader from '../../components/headers/NavigationHeader';
 
 const background = require('../../../assets/images/background.png');
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
+  const [nameText, setNameText] = useState('');
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
+  const [receiveEmails, setReceiveEmails] = useState(false);
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   useEffect(() => {
@@ -37,15 +40,15 @@ export default function LoginScreen() {
   // e.g. syncing data, e.g. register a user, can be called by an action
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
+  const onChangeName = text => setNameText(text);
+
   const onChangeEmail = text => setEmailText(text);
 
   const onChangePassword = text => setPasswordText(text);
 
-  const onPressLogin = () => console.log('LOGIN');
+  const toggleSwitch = () => setReceiveEmails(!receiveEmails);
 
   const onPressRegister = () => console.log('REGISTER');
-
-  const onPressForgotPassword = () => console.log('FORGOT');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -70,15 +73,22 @@ export default function LoginScreen() {
       paddingHorizontal: getWidth(7),
       ...textStyles.regular16_white,
     },
+    switchContainer: {
+      flexDirection: 'row',
+      width: '80%',
+      justifyContent: 'space-between',
+    },
+    switchTextContainer: {
+      width: getWidth(200),
+    },
+    switchText: {
+      ...textStyles.regular16_white,
+    },
     buttonContainer: {
+      position: 'absolute',
       width: '100%',
       alignItems: 'center',
-      position: 'absolute',
-      bottom: getHeight(80),
-    },
-    forgot: {
-      ...textStyles.bold16_limeGreen,
-      textAlign: 'center',
+      bottom: getHeight(60),
     },
   });
 
@@ -87,8 +97,16 @@ export default function LoginScreen() {
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
-          <Text style={styles.title}>My GraphQL Jobs</Text>
+          <NavigationHeader title="Register" />
           <Spacer height={70} />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeName}
+            value={nameText}
+            placeholder="name..."
+            placeholderTextColor={colors.white}
+          />
+          <Spacer height={30} />
           <TextInput
             style={styles.input}
             onChangeText={onChangeEmail}
@@ -105,15 +123,24 @@ export default function LoginScreen() {
             placeholderTextColor={colors.white}
             secureTextEntry={true}
           />
-          <Spacer height={60} />
+          <Spacer height={30} />
+          <View style={styles.switchContainer}>
+            <View style={styles.switchTextContainer}>
+              <Text style={styles.switchText}>
+                Receive the latest jobs by email?
+              </Text>
+            </View>
+            <Switch
+              trackColor={{false: colors.black, true: colors.limeGreen}}
+              thumbColor={colors.pink}
+              ios_backgroundColor={colors.black}
+              onValueChange={toggleSwitch}
+              value={receiveEmails}
+            />
+          </View>
+          <Spacer height={50} />
           <View style={styles.buttonContainer}>
-            <DefaultButton text="Login" onPress={onPressLogin} />
-            <Spacer height={20} />
             <DefaultButton text="Register" onPress={onPressRegister} />
-            <Spacer height={40} />
-            <TouchableOpacity onPress={onPressForgotPassword}>
-              <Text style={styles.forgot}>Forgot password?</Text>
-            </TouchableOpacity>
           </View>
         </AuthCard>
       </ImageBackground>

@@ -52,7 +52,7 @@ export default function ThemeProvider({children}) {
     },
   };
 
-  const publicMethods = React.useMemo(
+  const methods = React.useMemo(
     () => ({
       colors,
       textStyles,
@@ -61,7 +61,7 @@ export default function ThemeProvider({children}) {
   );
 
   return (
-    <ThemeContext.Provider value={{...publicMethods}}>
+    <ThemeContext.Provider value={{...methods}}>
       {children}
     </ThemeContext.Provider>
   );

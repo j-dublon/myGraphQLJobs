@@ -6,7 +6,7 @@ export default function ({height}) {
   const {getHeight} = ScaleHook();
 
   if (!height) {
-    throw new Error('Spacer requires a height prop.');
+    throw new Error('Please add a height');
   }
 
   const styles = {

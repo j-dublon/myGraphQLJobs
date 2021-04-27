@@ -5,7 +5,7 @@ import {
   Text,
   ImageBackground,
   TextInput,
-  TouchableOpacity,
+  Switch,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -13,18 +13,18 @@ import {ScaleHook} from 'react-native-design-to-component';
 import AuthCard from '../../components/cards/AuthCard';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
+import NavigationHeader from '../../components/headers/NavigationHeader';
 
 const background = require('../../../assets/images/background.png');
 
-export default function LoginScreen() {
+export default function ForgotPassword() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [emailText, setEmailText] = useState('');
-  const [passwordText, setPasswordText] = useState('');
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   useEffect(() => {
@@ -39,13 +39,7 @@ export default function LoginScreen() {
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onChangeEmail = text => setEmailText(text);
 
-  const onChangePassword = text => setPasswordText(text);
-
-  const onPressLogin = () => console.log('LOGIN');
-
-  const onPressRegister = () => console.log('REGISTER');
-
-  const onPressForgotPassword = () => console.log('FORGOT');
+  const onPressSend = () => console.log('SEND');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -71,14 +65,10 @@ export default function LoginScreen() {
       ...textStyles.regular16_white,
     },
     buttonContainer: {
+      position: 'absolute',
       width: '100%',
       alignItems: 'center',
-      position: 'absolute',
-      bottom: getHeight(80),
-    },
-    forgot: {
-      ...textStyles.bold16_limeGreen,
-      textAlign: 'center',
+      bottom: getHeight(60),
     },
   });
 
@@ -87,7 +77,7 @@ export default function LoginScreen() {
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
-          <Text style={styles.title}>My GraphQL Jobs</Text>
+          <NavigationHeader title="Email me" />
           <Spacer height={70} />
           <TextInput
             style={styles.input}
@@ -96,24 +86,9 @@ export default function LoginScreen() {
             placeholder="email..."
             placeholderTextColor={colors.white}
           />
-          <Spacer height={30} />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangePassword}
-            value={passwordText}
-            placeholder="password..."
-            placeholderTextColor={colors.white}
-            secureTextEntry={true}
-          />
-          <Spacer height={60} />
+          <Spacer height={50} />
           <View style={styles.buttonContainer}>
-            <DefaultButton text="Login" onPress={onPressLogin} />
-            <Spacer height={20} />
-            <DefaultButton text="Register" onPress={onPressRegister} />
-            <Spacer height={40} />
-            <TouchableOpacity onPress={onPressForgotPassword}>
-              <Text style={styles.forgot}>Forgot password?</Text>
-            </TouchableOpacity>
+            <DefaultButton text="Send" onPress={onPressSend} />
           </View>
         </AuthCard>
       </ImageBackground>

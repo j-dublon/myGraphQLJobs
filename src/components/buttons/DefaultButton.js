@@ -15,7 +15,7 @@ export default function DefaultButton({text, onPress}) {
       width: '60%',
       backgroundColor: colors.black,
       borderRadius: radius(8),
-      borderWidth: getWidth(1),
+      borderWidth: getWidth(2),
       borderColor: colors.limeGreen,
     },
     touch: {

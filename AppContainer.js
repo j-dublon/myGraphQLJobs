@@ -1,6 +1,6 @@
 import React from 'react';
 import AppStack from './src/navigation/AppStack';
-import HomeScreen from './src/screens/home/HomeScreen';
+import ProfileScreen from './src/screens/profile/ProfileScreen';
 // import TabContainer from './routes/TabContainer';
 // import AuthContainer from './routes/AuthContainer';
 // import useLoading from './hooks/loading/useLoading';
@@ -13,8 +13,8 @@ export default function AppContainer() {
     <>
       <AppStack.Navigator headerMode="screen">
         <AppStack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
+          name="ProfileScreen"
+          component={ProfileScreen}
           options={{headerShown: false}}
         />
       </AppStack.Navigator>

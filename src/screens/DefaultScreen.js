@@ -37,7 +37,6 @@ export default function DefaultScreen() {
       flex: 1,
       resizeMode: 'cover',
       alignItems: 'center',
-      justifyContent: 'center',
     },
     title: {
       ...textStyles.bold30_white,
@@ -46,16 +45,12 @@ export default function DefaultScreen() {
     },
   });
 
-  const title = 'My GraphQL Jobs';
-
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.screen}>
-      <ImageBackground source={background} style={styles.image}>
-        <AuthCard>
-          <Text style={styles.title}>{title}</Text>
-        </AuthCard>
-      </ImageBackground>
+      <ImageBackground
+        source={background}
+        style={styles.image}></ImageBackground>
     </View>
   );
 }

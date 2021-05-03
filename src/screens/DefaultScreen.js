@@ -38,11 +38,6 @@ export default function DefaultScreen() {
       resizeMode: 'cover',
       alignItems: 'center',
     },
-    title: {
-      ...textStyles.bold30_white,
-      alignSelf: 'center',
-      marginVertical: getHeight(10),
-    },
   });
 
   // ** ** ** ** ** RENDER ** ** ** ** **

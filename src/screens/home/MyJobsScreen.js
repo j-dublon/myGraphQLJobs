@@ -128,11 +128,6 @@ export default function MyJobsScreen() {
       resizeMode: 'cover',
       alignItems: 'center',
     },
-    title: {
-      ...textStyles.bold30_white,
-      alignSelf: 'center',
-      marginVertical: getHeight(10),
-    },
     scroll: {
       width: '100%',
     },

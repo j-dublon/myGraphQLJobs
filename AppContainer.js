@@ -1,6 +1,6 @@
 import React from 'react';
 import AppStack from './src/navigation/AppStack';
-import ProfileScreen from './src/screens/profile/ProfileScreen';
+import PreferencesScreen from './src/screens/profile/PreferencesScreen';
 // import TabContainer from './routes/TabContainer';
 // import AuthContainer from './routes/AuthContainer';
 // import useLoading from './hooks/loading/useLoading';
@@ -13,8 +13,8 @@ export default function AppContainer() {
     <>
       <AppStack.Navigator headerMode="screen">
         <AppStack.Screen
-          name="ProfileScreen"
-          component={ProfileScreen}
+          name="PreferencesScreen"
+          component={PreferencesScreen}
           options={{headerShown: false}}
         />
       </AppStack.Navigator>

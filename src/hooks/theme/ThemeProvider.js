@@ -21,6 +21,7 @@ export default function ThemeProvider({children}) {
     midPink: 'rgba(152, 0, 94, 1)',
     pink: 'rgba(228, 52, 170, 1)',
     limeGreen: 'rgba(0, 200, 0, 1)',
+    white50: 'rgba(255, 255, 255, 0.5)',
     white: 'rgba(255, 255, 255, 1)',
   };
 

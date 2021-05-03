@@ -22,6 +22,7 @@ export default function BasicModal({
   commitment,
   description,
   applyUrl,
+  favorites = false,
 }) {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {getHeight, radius} = ScaleHook();
@@ -79,12 +80,16 @@ export default function BasicModal({
     },
     closeText: {
       ...textStyles.bold20_white,
-      textDecorationLine: 'underline',
     },
   });
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onPressClose = () => setVisibility(false);
+
+  const onPressRemove = () => {
+    console.log('REMOVE');
+    setVisibility(false);
+  };
 
   const onPressApply = async () => {
     Linking.canOpenURL(applyUrl).then(supported => {
@@ -116,8 +121,14 @@ export default function BasicModal({
           <Text style={styles.applyText}>Apply now</Text>
         </TouchableOpacity>
         <Spacer height={20} />
-        <TouchableOpacity onPress={onPressClose} style={styles.linkTouch}>
-          <Text style={styles.closeText}>Close</Text>
+        <TouchableOpacity
+          onPress={favorites ? onPressRemove : onPressClose}
+          style={styles.linkTouch}>
+          {favorites ? (
+            <Text style={styles.closeText}>Remove from My Jobs</Text>
+          ) : (
+            <Text style={styles.closeText}>Close</Text>
+          )}
         </TouchableOpacity>
         <Spacer height={20} />
       </ScrollView>

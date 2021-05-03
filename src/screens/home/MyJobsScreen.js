@@ -1,13 +1,24 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground, Linking} from 'react-native';
+/*
+ * Jira Ticket:
+ * Created Date: Mon, 3rd May 2021, 20:47:20 pm
+ * Author: Jodi Dublon
+ * Email: jodi.dublon@thedistance.co.uk
+ * Copyright (c) 2021 The Distance
+ */
+
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ImageBackground,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import useTheme from '../../hooks/theme/UseTheme';
+import useTheme from '../..//hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
-import CardStack from 'react-native-card-stack-swiper';
 import NavigationHeader from '../../components/headers/NavigationHeader';
-import JobCard from '../../components/cards/JobCard';
-import {format} from 'date-fns';
-import IconSwiperCard from '../../components/cards/IconSwiperCard';
 import BasicModal from '../../components/modals/BasicModal';
 
 const background = require('../../../assets/images/background.png');
@@ -81,53 +92,31 @@ const fakeData = [
   },
 ];
 
-export default function HomeScreen() {
+export default function MyJobsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const navigation = useNavigation();
-  const swiperRef = useRef();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+  useEffect(() => {
+    navigation.setOptions({
+      header: () => null,
+    });
+  }, []);
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-  const onPressDetails = index => {
+  const onPressJob = index => {
     setCurrentJobIndex(index);
     setShowDetailsModal(true);
   };
-
-  const onPressWebsite = async () => {
-    const url = fakeData[currentJobIndex].applyUrl;
-
-    Linking.canOpenURL(url).then(supported => {
-      if (supported) {
-        Linking.openURL(url);
-      } else {
-        Alert.alert(`Sorry, we can't open ${url} right now`);
-      }
-    });
-  };
-
-  const onPressRight = () => swiperRef.current.swipeRight();
-
-  const onPressLeft = () => swiperRef.current.swipeLeft();
-
-  const onSwipeRight = () => console.log('RIGHT');
-
-  const onSwipeLeft = () => console.log('LEFT');
-
-  const onEmptyStack = () => (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.outText}>That's it for now...</Text>
-    </View>
-  );
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -139,66 +128,55 @@ export default function HomeScreen() {
       resizeMode: 'cover',
       alignItems: 'center',
     },
-    cardStack: {
-      height: '70%',
-      width: '80%',
-      alignItems: 'center',
-      justifyContent: 'center',
+    title: {
+      ...textStyles.bold30_white,
+      alignSelf: 'center',
+      marginVertical: getHeight(10),
     },
-    iconContainer: {
-      flexDirection: 'row',
-      width: '45%',
-      justifyContent: 'space-between',
+    scroll: {
+      width: '100%',
     },
-    icon: {
-      color: colors.white,
-    },
-    emptyContainer: {
-      backgroundColor: colors.darkPink100,
-      height: '30%',
-      width: '80%',
-      padding: 15,
-      borderRadius: radius(20),
+    jobCard: {
+      backgroundColor: colors.darkPink,
+      width: '92%',
+      alignSelf: 'center',
+      marginVertical: getHeight(10),
+      borderRadius: radius(8),
       borderColor: colors.white,
       borderWidth: getWidth(0.5),
-      alignItems: 'center',
-      justifyContent: 'center',
+      padding: getHeight(10),
     },
-    outText: {
-      ...textStyles.bold24_white,
-      fontSize: 24,
-      textAlign: 'center',
+    title: {
+      ...textStyles.bold16_white,
+    },
+    text: {
+      ...textStyles.regular16_white,
     },
   });
 
   // ** ** ** ** ** RENDER ** ** ** ** **
+  const renderCard = (job, index) => (
+    <View style={styles.jobCard}>
+      <TouchableOpacity onPress={() => onPressJob(index)}>
+        <Text style={styles.title}>{job.title}</Text>
+        <Text style={styles.text}>{job.company.name}</Text>
+        <Text style={styles.text}>{job.commitment.title}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
-        <NavigationHeader title="Home" back={false} onCard={false} />
-        <CardStack
-          style={styles.cardStack}
-          ref={swiperRef}
-          onSwipedLeft={onSwipeLeft}
-          onSwipedRight={onSwipeRight}
-          renderNoMoreCards={onEmptyStack}>
-          {fakeData.map((job, index) => {
-            const formattedDate = format(new Date(job.postedAt), 'dd/MM/yyyy');
-            return (
-              <JobCard
-                title={job.title}
-                company={job.company.name}
-                city={job.cities[0].name}
-                commitment={job.commitment.title}
-                posted={formattedDate}
-                onPressMoreInfo={() => onPressDetails(index)}
-                onPressWebsite={onPressWebsite}
-                key={index}
-              />
-            );
-          })}
-        </CardStack>
-        <IconSwiperCard onPressLeft={onPressLeft} onPressRight={onPressRight} />
+        <NavigationHeader title="My Jobs" back={true} onCard={false} />
+        <FlatList
+          data={fakeData}
+          renderItem={({item, index}) => renderCard(item, index)}
+          keyExtractor={item => item.id}
+          style={styles.scroll}
+          // onEndReached={reachedEnd}
+          showsVerticalScrollIndicator={false}
+        />
         <BasicModal
           visibility={showDetailsModal}
           setVisibility={setShowDetailsModal}
@@ -206,6 +184,7 @@ export default function HomeScreen() {
           commitment={fakeData[currentJobIndex].commitment.title}
           description={fakeData[currentJobIndex].description}
           applyUrl={fakeData[currentJobIndex].applyUrl}
+          favorites={true}
         />
       </ImageBackground>
     </View>

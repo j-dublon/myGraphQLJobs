@@ -9,6 +9,7 @@ import NavigationHeader from '../../components/headers/NavigationHeader';
 import JobCard from '../../components/cards/JobCard';
 import {format} from 'date-fns';
 import IconSwiperCard from '../../components/cards/IconSwiperCard';
+import BasicModal from '../../components/modals/BasicModal';
 
 const background = require('../../../assets/images/background.png');
 
@@ -89,14 +90,19 @@ export default function HomeScreen() {
   const swiperRef = useRef();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
-
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [currentJobIndex, setCurrentJobIndex] = useState(0);
+  console.log(currentJobIndex, fakeData[currentJobIndex].title);
   // ** ** ** ** ** EFFECTS ** ** ** ** **
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-  const onPressMoreInfo = () => console.log('more info');
+  const onPressDetails = index => {
+    setCurrentJobIndex(index);
+    setShowDetailsModal(true);
+  };
 
   const onPressWebsite = () => console.log('website');
 
@@ -111,6 +117,12 @@ export default function HomeScreen() {
   const onEmptyStack = () => (
     <View style={styles.emptyContainer}>
       <Text style={styles.outText}>That's it for now...</Text>
+    </View>
+  );
+
+  const JobDetail = description => (
+    <View style={{position: 'absolute', zIndex: 1}}>
+      <Text style={{color: 'white'}}>Hello HELLOOOOOOOO</Text>
     </View>
   );
 
@@ -176,7 +188,7 @@ export default function HomeScreen() {
                 city={job.cities[0].name}
                 commitment={job.commitment.title}
                 posted={formattedDate}
-                onPressMoreInfo={onPressMoreInfo}
+                onPressMoreInfo={() => onPressDetails(index)}
                 onPressWebsite={onPressWebsite}
                 key={index}
               />
@@ -184,6 +196,14 @@ export default function HomeScreen() {
           })}
         </CardStack>
         <IconSwiperCard onPressLeft={onPressLeft} onPressRight={onPressRight} />
+        <BasicModal
+          visibility={showDetailsModal}
+          setVisibility={setShowDetailsModal}
+          title={fakeData[currentJobIndex].title}
+          commitment={fakeData[currentJobIndex].commitment.title}
+          description={fakeData[currentJobIndex].description}
+          applyUrl={fakeData[currentJobIndex].applyUrl}
+        />
       </ImageBackground>
     </View>
   );

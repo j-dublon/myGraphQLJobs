@@ -175,7 +175,12 @@ export default function HomeScreen() {
   return (
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
-        <NavigationHeader title="Home" back={false} onCard={false} />
+        <NavigationHeader
+          title="Home"
+          back={false}
+          onCard={false}
+          profile={true}
+        />
         <CardStack
           style={styles.cardStack}
           ref={swiperRef}

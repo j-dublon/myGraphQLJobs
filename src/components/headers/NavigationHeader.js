@@ -1,11 +1,16 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faBackward} from '@fortawesome/free-solid-svg-icons';
+import {faUser} from '@fortawesome/free-solid-svg-icons';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
 
-export default function NavigationHeader({title, back, onCard}) {
+export default function NavigationHeader({
+  title,
+  back,
+  onCard,
+  profile = false,
+}) {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
@@ -22,7 +27,8 @@ export default function NavigationHeader({title, back, onCard}) {
     },
     iconContainer: {
       position: 'absolute',
-      left: getWidth(15),
+      left: profile ? undefined : getWidth(15),
+      right: profile ? getWidth(15) : undefined,
     },
     touch: {
       flex: 1,
@@ -39,7 +45,7 @@ export default function NavigationHeader({title, back, onCard}) {
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
-      {back === true && (
+      {back && (
         <View style={styles.iconContainer}>
           <TouchableOpacity
             style={styles.touch}
@@ -49,6 +55,15 @@ export default function NavigationHeader({title, back, onCard}) {
         </View>
       )}
       <Text style={styles.text}>{title}</Text>
+      {profile && (
+        <View style={styles.iconContainer}>
+          <TouchableOpacity
+            style={styles.touch}
+            onPress={() => console.log('profile')}>
+            <FontAwesomeIcon icon={faUser} style={styles.icon} size={28} />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }

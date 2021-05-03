@@ -21,9 +21,10 @@ export default function BasicModal({
   title,
   commitment,
   description,
+  applyUrl,
 }) {
   // ** ** ** ** ** HOOKS ** ** ** ** **
-  const {getHeight, radius, getWidth} = ScaleHook();
+  const {getHeight, radius} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -86,13 +87,13 @@ export default function BasicModal({
   const onPressClose = () => setVisibility(false);
 
   const onPressApply = async () => {
-    const supported = await Linking.canOpenURL(url);
-
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      Alert.alert(`Sorry, this URL isn't working`);
-    }
+    Linking.canOpenURL(applyUrl).then(supported => {
+      if (supported) {
+        Linking.openURL(applyUrl);
+      } else {
+        Alert.alert(`Sorry, we can't open ${applyUrl} right now`);
+      }
+    });
   };
 
   // ** ** ** ** ** RENDER ** ** ** ** **

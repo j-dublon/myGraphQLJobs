@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {StyleSheet, View, Text, ImageBackground} from 'react-native';
+import {StyleSheet, View, Text, ImageBackground, Linking} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -92,7 +92,7 @@ export default function HomeScreen() {
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
-  console.log(currentJobIndex, fakeData[currentJobIndex].title);
+
   // ** ** ** ** ** EFFECTS ** ** ** ** **
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
@@ -104,7 +104,17 @@ export default function HomeScreen() {
     setShowDetailsModal(true);
   };
 
-  const onPressWebsite = () => console.log('website');
+  const onPressWebsite = async () => {
+    const url = fakeData[currentJobIndex].applyUrl;
+
+    Linking.canOpenURL(url).then(supported => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        Alert.alert(`Sorry, we can't open ${url} right now`);
+      }
+    });
+  };
 
   const onPressRight = () => swiperRef.current.swipeRight();
 
@@ -117,12 +127,6 @@ export default function HomeScreen() {
   const onEmptyStack = () => (
     <View style={styles.emptyContainer}>
       <Text style={styles.outText}>That's it for now...</Text>
-    </View>
-  );
-
-  const JobDetail = description => (
-    <View style={{position: 'absolute', zIndex: 1}}>
-      <Text style={{color: 'white'}}>Hello HELLOOOOOOOO</Text>
     </View>
   );
 

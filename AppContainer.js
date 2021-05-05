@@ -17,6 +17,20 @@ export default function AppContainer() {
           component={PreferencesScreen}
           options={{headerShown: false}}
         />
+        {/* <AppStack.Screen
+          name="AuthContainer"
+          component={AuthContainer}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <AppStack.Screen
+          name="TabContainer"
+          component={TabContainer}
+          options={{
+            headerShown: false,
+          }}
+        /> */}
       </AppStack.Navigator>
       {/* {loading && LoadingView()} */}
     </>

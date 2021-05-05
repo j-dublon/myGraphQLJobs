@@ -12,7 +12,7 @@ import {
   View,
   Text,
   ImageBackground,
-  TextInput,
+  TouchableOpacity,
   Switch,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -22,25 +22,25 @@ import NavigationHeader from '../../components/headers/NavigationHeader';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import AuthCard from '../../components/cards/AuthCard';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faChevronDown} from '@fortawesome/free-solid-svg-icons';
+import QuickPicker from 'quick-picker';
 
 const background = require('../../../assets/images/background.png');
-
-const fakeUserData = {
-  name: 'Jodi',
-  email: 'jodi@me.com',
-  homeCity: 'Leeds',
-};
 
 export default function PreferencesScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
-  const [nameText, setNameText] = useState(fakeUserData.name);
-  const [emailText, setEmailText] = useState(fakeUserData.email);
   const [remoteOnly, setRemoteOnly] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState();
+  const [selectedCity, setSelectedCity] = useState();
+
+  const countryData = ['', 'Germany', 'USA', 'UK'];
+  const cityData = ['', 'London', 'Berlin', 'Amsterdam'];
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   useEffect(() => {
@@ -53,11 +53,31 @@ export default function PreferencesScreen() {
   // e.g. syncing data, e.g. register a user, can be called by an action
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-  const onChangeName = text => setNameText(text);
+  const onPressCountry = () => {
+    QuickPicker.open({
+      items: countryData,
+      selectedValue: '',
+      onPressDone: value => {
+        setSelectedCountry(value);
+        QuickPicker.close();
+      },
+    });
+  };
 
-  const onChangeEmail = text => setEmailText(text);
+  const onPressCity = () => {
+    QuickPicker.open({
+      items: cityData,
+      selectedValue: '',
+      onPressDone: value => {
+        setSelectedCity(value);
+        QuickPicker.close();
+      },
+    });
+  };
 
-  const toggleSwitch = () => setRemoteOnly(!remoteOnly);
+  const onToggleSwitch = () => setRemoteOnly(!remoteOnly);
+
+  const onPressView = () => {};
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -76,15 +96,6 @@ export default function PreferencesScreen() {
       marginVertical: getHeight(10),
       marginHorizontal: '10%',
     },
-    input: {
-      height: getHeight(50),
-      width: '80%',
-      borderColor: colors.white,
-      borderWidth: getWidth(1),
-      paddingHorizontal: getWidth(7),
-      ...textStyles.regular16_white,
-      backgroundColor: colors.darkPink,
-    },
     switchContainer: {
       flexDirection: 'row',
       width: '80%',
@@ -95,6 +106,26 @@ export default function PreferencesScreen() {
     },
     switchText: {
       ...textStyles.regular16_white,
+    },
+    box: {
+      height: getHeight(50),
+      width: '80%',
+      borderColor: colors.white,
+      borderWidth: getWidth(1),
+      paddingHorizontal: getWidth(7),
+      backgroundColor: colors.darkPink,
+    },
+    touch: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+    },
+    boxText: {
+      ...textStyles.bold16_white,
+    },
+    icon: {
+      color: colors.white,
     },
   });
 
@@ -107,19 +138,31 @@ export default function PreferencesScreen() {
           <Spacer height={20} />
           <Text style={styles.title}>Show me:</Text>
           <Spacer height={20} />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeName}
-            value={nameText}
-            placeholderTextColor={colors.white}
-          />
+          <View style={styles.box}>
+            <TouchableOpacity style={styles.touch} onPress={onPressCountry}>
+              <Text style={styles.boxText}>
+                {selectedCountry ? selectedCountry : 'Country...'}
+              </Text>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                style={styles.icon}
+                size={20}
+              />
+            </TouchableOpacity>
+          </View>
           <Spacer height={30} />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeEmail}
-            value={emailText}
-            placeholderTextColor={colors.white}
-          />
+          <View style={styles.box}>
+            <TouchableOpacity style={styles.touch} onPress={onPressCity}>
+              <Text style={styles.boxText}>
+                {selectedCity ? selectedCity : 'City...'}
+              </Text>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                style={styles.icon}
+                size={20}
+              />
+            </TouchableOpacity>
+          </View>
           <Spacer height={30} />
           <View style={styles.switchContainer}>
             <View style={styles.switchTextContainer}>
@@ -129,12 +172,12 @@ export default function PreferencesScreen() {
               trackColor={{false: colors.black, true: colors.limeGreen}}
               thumbColor={colors.pink}
               ios_backgroundColor={colors.black}
-              onValueChange={toggleSwitch}
+              onValueChange={onToggleSwitch}
               value={remoteOnly}
             />
           </View>
           <Spacer height={60} />
-          <DefaultButton text="View" />
+          <DefaultButton text="View" onPress={onPressView} />
         </AuthCard>
       </ImageBackground>
     </View>

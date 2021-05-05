@@ -16,7 +16,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import useTheme from '../..//hooks/theme/UseTheme';
+import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import NavigationHeader from '../../components/headers/NavigationHeader';
 import BasicModal from '../../components/modals/BasicModal';

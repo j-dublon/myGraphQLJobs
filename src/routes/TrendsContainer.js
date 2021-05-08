@@ -1,7 +1,7 @@
 import React from 'react';
 import TrendsStack from '../navigation/TrendsStack';
 import {TransitionPresets} from '@react-navigation/stack';
-import TrendsScreen from '../screens/favorites/TrendsScreen';
+import TrendsScreen from '../screens/trends/TrendsScreen';
 
 export default function FavoritesContainer(props) {
   return (

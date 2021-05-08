@@ -9,11 +9,11 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import useTheme from '../hooks/theme/UseTheme';
+import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
-import AuthCard from '../components/cards/AuthCard';
+import AuthCard from '../../components/cards/AuthCard';
 
-const background = require('../../assets/images/background.png');
+const background = require('../../../assets/images/background.png');
 
 export default function TrendsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **

@@ -33,6 +33,11 @@ export default function ThemeProvider({children}) {
   };
 
   const textStyles = {
+    bold12_black: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(12),
+      color: colors.black,
+    },
     bold16_limeGreen: {
       fontFamily: fonts.bold,
       fontSize: fontSize(16),

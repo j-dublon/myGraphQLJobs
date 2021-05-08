@@ -15,6 +15,7 @@ export default function ThemeProvider({children}) {
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
 
   const colors = {
+    actualBlack: 'rgba(0, 0, 0, 1)',
     black: 'rgba(20, 20, 20, 1)',
     darkPink: 'rgba(35, 0, 0, 0.9)',
     darkPink100: 'rgba(35, 0, 0, 1)',

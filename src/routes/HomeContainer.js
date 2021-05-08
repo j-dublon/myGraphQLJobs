@@ -12,7 +12,11 @@ export default function HomeContainer(props) {
         gestureDirection: 'horizontal',
         ...TransitionPresets.SlideFromRightIOS,
       }}>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{headerShown: false}}
+      />
     </HomeStack.Navigator>
   );
 }

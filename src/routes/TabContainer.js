@@ -57,7 +57,7 @@ export default function TabContainer(props) {
 
   return (
     <BottomTab.Navigator
-      // headerMode="screen"
+      // options={{headerShown: false}}
       tabBarOptions={{
         tabStyle: styles.item,
         style: styles.tabBar,

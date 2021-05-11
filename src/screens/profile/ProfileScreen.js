@@ -83,22 +83,18 @@ export default function ProfileScreen() {
             style={styles.input}
             onChangeText={onChangeName}
             value={nameText}
-            placeholderTextColor={colors.white}
           />
           <Spacer height={30} />
           <TextInput
             style={styles.input}
             onChangeText={onChangeEmail}
             value={emailText}
-            placeholderTextColor={colors.white}
           />
           <Spacer height={30} />
           <TextInput
             style={styles.input}
             onChangeText={onChangeCity}
             value={cityText}
-            placeholder="email..."
-            placeholderTextColor={colors.white}
           />
           <Spacer height={60} />
           <DefaultButton text="Change password" onPress={onChangePassword} />

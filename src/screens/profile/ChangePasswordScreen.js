@@ -14,6 +14,7 @@ import {ScaleHook} from 'react-native-design-to-component';
 import AuthCard from '../../components/cards/AuthCard';
 import NavigationHeader from '../../components/headers/NavigationHeader';
 import Spacer from '../../components/utility/Spacer';
+import DefaultButton from '../../components/buttons/DefaultButton';
 
 const background = require('../../../assets/images/background.png');
 
@@ -34,11 +35,11 @@ export default function ChangePasswordScreen() {
   // e.g. syncing data, e.g. register a user, can be called by an action
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-  const onChangeOldPassword = () => {};
+  const onChangeOldPassword = text => setOldPassword(text);
 
-  const onChangeNewPassword = () => {};
+  const onChangeNewPassword = text => setNewPassword(text);
 
-  const onChangeConfirmNewPassword = () => {};
+  const onChangeConfirmNewPassword = text => setConfirmNewPassword(text);
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -72,23 +73,25 @@ export default function ChangePasswordScreen() {
           <TextInput
             style={styles.input}
             onChangeText={onChangeOldPassword}
-            value={oldPassword}
+            placeholder="old password..."
             placeholderTextColor={colors.white}
           />
           <Spacer height={20} />
           <TextInput
             style={styles.input}
             onChangeText={onChangeNewPassword}
-            value={newPassword}
+            placeholder="new password..."
             placeholderTextColor={colors.white}
           />
           <Spacer height={20} />
           <TextInput
             style={styles.input}
             onChangeText={onChangeConfirmNewPassword}
-            value={confirmNewPassword}
+            placeholder="confirm new password..."
             placeholderTextColor={colors.white}
           />
+          <Spacer height={60} />
+          <DefaultButton text="Save" />
         </AuthCard>
       </ImageBackground>
     </View>

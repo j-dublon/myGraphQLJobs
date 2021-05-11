@@ -17,6 +17,7 @@ export default function ThemeProvider({children}) {
   const colors = {
     actualBlack: 'rgba(0, 0, 0, 1)',
     black: 'rgba(20, 20, 20, 1)',
+    darkPink70: 'rgba(35, 0, 0, 0.7)',
     darkPink: 'rgba(35, 0, 0, 0.9)',
     darkPink100: 'rgba(35, 0, 0, 1)',
     midPink: 'rgba(152, 0, 94, 1)',
@@ -38,6 +39,10 @@ export default function ThemeProvider({children}) {
       fontFamily: fonts.bold,
       fontSize: fontSize(12),
       color: colors.black,
+    },
+    bold12_noColor: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(12),
     },
     bold16_limeGreen: {
       fontFamily: fonts.bold,

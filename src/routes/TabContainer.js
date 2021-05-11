@@ -41,18 +41,24 @@ export default function TabContainer(props) {
       alignItems: 'center',
     },
     label: {
-      ...textStyles.bold12_black,
+      ...textStyles.bold12_noColor,
     },
   });
   // ** ** ** ** ** RENDER ** ** ** ** **
-  const TabBarIcon = ({name}) => {
+  const TabBarIcon = ({name, color}) => {
     const icons = {
       home: faHome,
       heart: faHeart,
       line: faChartLine,
     };
 
-    return <FontAwesomeIcon icon={icons[name]} size={22} />;
+    return (
+      <FontAwesomeIcon
+        icon={icons[name]}
+        size={22}
+        style={{color: colors.white}}
+      />
+    );
   };
 
   return (
@@ -62,15 +68,18 @@ export default function TabContainer(props) {
         tabStyle: styles.item,
         style: styles.tabBar,
         labelStyle: styles.label,
-        activeTintColor: 'red',
-        inactiveTintColor: 'black',
+        activeTintColor: colors.white,
+        inactiveTintColor: colors.white,
+        activeBackgroundColor: colors.darkPink70,
       }}>
       <BottomTab.Screen
         name="HomeContainer"
         component={HomeContainer}
         options={({route}) => ({
           // tabBarVisible: getVisibility(route),
-          tabBarIcon: () => <TabBarIcon name="home" />,
+          tabBarIcon: ({tintColor}) => (
+            <TabBarIcon name="home" color={tintColor} />
+          ),
           tabBarLabel: 'Home',
         })}
       />
@@ -79,7 +88,7 @@ export default function TabContainer(props) {
         component={FavoritesContainer}
         options={({route}) => ({
           // tabBarVisible: getVisibility(route),
-          tabBarIcon: () => <TabBarIcon name="heart" />,
+          tabBarIcon: ({color}) => <TabBarIcon name="heart" color={color} />,
           tabBarLabel: 'Mine',
         })}
       />
@@ -88,7 +97,7 @@ export default function TabContainer(props) {
         component={TrendsContainer}
         options={({route}) => ({
           // tabBarVisible: getVisibility(route),
-          tabBarIcon: () => <TabBarIcon name="line" />,
+          tabBarIcon: ({color}) => <TabBarIcon name="line" color={color} />,
           tabBarLabel: 'Trends',
         })}
       />

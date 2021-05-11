@@ -22,7 +22,11 @@ export default function TabContainer(props) {
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const getVisibility = ({route}) => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-    if (routeName === 'Calendar') {
+    if (
+      routeName === 'Profile' ||
+      routeName === 'ChangePassword' ||
+      routeName === 'Preferences'
+    ) {
       return false;
     }
     return true;

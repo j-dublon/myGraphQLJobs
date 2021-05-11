@@ -52,6 +52,8 @@ export default function ProfileScreen() {
 
   const onChangeCity = text => setCityText(text);
 
+  const onPressPreferences = () => navigation.navigate('Preferences');
+
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     screen: {
@@ -105,7 +107,7 @@ export default function ProfileScreen() {
           <Spacer height={60} />
           <DefaultButton text="Change password" />
           <Spacer height={30} />
-          <DefaultButton text="Preferences" />
+          <DefaultButton text="Preferences" onPress={onPressPreferences} />
         </AuthCard>
       </ImageBackground>
     </View>

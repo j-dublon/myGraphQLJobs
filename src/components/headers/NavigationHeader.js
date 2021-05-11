@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faUser, faBackward} from '@fortawesome/free-solid-svg-icons';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../../hooks/theme/UseTheme';
+import {useNavigation} from '@react-navigation/native';
 
 export default function NavigationHeader({
   title,
@@ -14,6 +15,7 @@ export default function NavigationHeader({
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {getHeight, getWidth} = ScaleHook();
   const {colors, textStyles} = useTheme();
+  const navigation = useNavigation();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = {
@@ -23,11 +25,11 @@ export default function NavigationHeader({
       height: onCard ? undefined : getHeight(80),
       justifyContent: 'center',
       alignItems: 'flex-end',
-      backgroundColor: colors.black,
+      backgroundColor: profile ? colors.black : undefined,
     },
     iconContainer: {
       position: 'absolute',
-      top: getHeight(33),
+      top: onCard ? getHeight(20) : getHeight(33),
       left: profile ? undefined : getWidth(15),
       right: profile ? getWidth(15) : undefined,
     },
@@ -50,7 +52,7 @@ export default function NavigationHeader({
         <View style={styles.iconContainer}>
           <TouchableOpacity
             style={styles.touch}
-            onPress={() => console.log('back')}>
+            onPress={() => navigation.goBack()}>
             <FontAwesomeIcon icon={faBackward} style={styles.icon} size={28} />
           </TouchableOpacity>
         </View>
@@ -60,7 +62,7 @@ export default function NavigationHeader({
         <View style={styles.iconContainer}>
           <TouchableOpacity
             style={styles.touch}
-            onPress={() => console.log('profile')}>
+            onPress={() => navigation.navigate('Profile')}>
             <FontAwesomeIcon icon={faUser} style={styles.icon} size={28} />
           </TouchableOpacity>
         </View>

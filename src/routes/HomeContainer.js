@@ -2,6 +2,8 @@ import React from 'react';
 import HomeStack from '../navigation/HomeStack';
 import {TransitionPresets} from '@react-navigation/stack';
 import HomeScreen from '../screens/home/HomeScreen';
+import ProfileScreen from '../screens/profile/ProfileScreen';
+import PreferencesScreen from '../screens/profile/PreferencesScreen';
 
 export default function HomeContainer(props) {
   return (
@@ -15,6 +17,16 @@ export default function HomeContainer(props) {
       <HomeStack.Screen
         name="Home"
         component={HomeScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="Preferences"
+        component={PreferencesScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>

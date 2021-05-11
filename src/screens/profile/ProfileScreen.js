@@ -36,12 +36,6 @@ export default function ProfileScreen() {
   const [cityText, setCityText] = useState(fakeUserData.homeCity);
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-  useEffect(() => {
-    navigation.setOptions({
-      header: () => null,
-    });
-  }, []);
-
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
 
@@ -51,6 +45,8 @@ export default function ProfileScreen() {
   const onChangeEmail = text => setEmailText(text);
 
   const onChangeCity = text => setCityText(text);
+
+  const onChangePassword = () => navigation.navigate('ChangePassword');
 
   const onPressPreferences = () => navigation.navigate('Preferences');
 
@@ -105,7 +101,7 @@ export default function ProfileScreen() {
             placeholderTextColor={colors.white}
           />
           <Spacer height={60} />
-          <DefaultButton text="Change password" />
+          <DefaultButton text="Change password" onPress={onChangePassword} />
           <Spacer height={30} />
           <DefaultButton text="Preferences" onPress={onPressPreferences} />
         </AuthCard>

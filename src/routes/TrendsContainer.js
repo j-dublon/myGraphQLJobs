@@ -12,7 +12,11 @@ export default function FavoritesContainer(props) {
         gestureDirection: 'horizontal',
         ...TransitionPresets.SlideFromRightIOS,
       }}>
-      <TrendsStack.Screen name="Trends" component={TrendsScreen} />
+      <TrendsStack.Screen
+        name="Trends"
+        component={TrendsScreen}
+        options={{headerShown: false}}
+      />
     </TrendsStack.Navigator>
   );
 }

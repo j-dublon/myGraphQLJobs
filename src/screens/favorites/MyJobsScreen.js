@@ -103,12 +103,6 @@ export default function MyJobsScreen() {
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-  useEffect(() => {
-    navigation.setOptions({
-      header: () => null,
-    });
-  }, []);
-
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
 

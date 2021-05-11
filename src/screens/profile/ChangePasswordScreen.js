@@ -1,39 +1,44 @@
+/*
+ * Jira Ticket:
+ * Created Date: Tue, 11th May 2021, 21:11:53 pm
+ * Author: Jodi Dublon
+ * Email: jodi.dublon@thedistance.co.uk
+ * Copyright (c) 2021 The Distance
+ */
+
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ImageBackground,
-  TextInput,
-  Switch,
-} from 'react-native';
+import {StyleSheet, View, TextInput, ImageBackground} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import AuthCard from '../../components/cards/AuthCard';
-import Spacer from '../../components/utility/Spacer';
-import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
+import Spacer from '../../components/utility/Spacer';
 
 const background = require('../../../assets/images/background.png');
 
-export default function ForgotPassword() {
+export default function ChangePasswordScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth} = ScaleHook();
+  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
-  const [emailText, setEmailText] = useState('');
+  const [oldPassword, setOldPassword] = useState();
+  const [newPassword, setNewPassword] = useState();
+  const [confirmNewPassword, setConfirmNewPassword] = useState();
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-  const onChangeEmail = text => setEmailText(text);
+  const onChangeOldPassword = () => {};
 
-  const onPressSend = () => console.log('SEND');
+  const onChangeNewPassword = () => {};
+
+  const onChangeConfirmNewPassword = () => {};
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -46,10 +51,6 @@ export default function ForgotPassword() {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    title: {
-      ...textStyles.bold30_white,
-      marginVertical: getHeight(10),
-    },
     input: {
       height: getHeight(50),
       width: '80%',
@@ -57,12 +58,7 @@ export default function ForgotPassword() {
       borderWidth: getWidth(1),
       paddingHorizontal: getWidth(7),
       ...textStyles.regular16_white,
-    },
-    buttonContainer: {
-      position: 'absolute',
-      width: '100%',
-      alignItems: 'center',
-      bottom: getHeight(60),
+      backgroundColor: colors.darkPink,
     },
   });
 
@@ -71,19 +67,28 @@ export default function ForgotPassword() {
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
-          <NavigationHeader title="Email me" back={true} onCard={true} />
-          <Spacer height={70} />
+          <NavigationHeader title="Password" back={true} onCard={true} />
+          <Spacer height={20} />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeEmail}
-            value={emailText}
-            placeholder="email..."
+            onChangeText={onChangeOldPassword}
+            value={oldPassword}
             placeholderTextColor={colors.white}
           />
-          <Spacer height={50} />
-          <View style={styles.buttonContainer}>
-            <DefaultButton text="Send" onPress={onPressSend} />
-          </View>
+          <Spacer height={20} />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeNewPassword}
+            value={newPassword}
+            placeholderTextColor={colors.white}
+          />
+          <Spacer height={20} />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeConfirmNewPassword}
+            value={confirmNewPassword}
+            placeholderTextColor={colors.white}
+          />
         </AuthCard>
       </ImageBackground>
     </View>

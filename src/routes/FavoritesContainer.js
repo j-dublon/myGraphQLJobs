@@ -12,7 +12,11 @@ export default function FavoritesContainer(props) {
         gestureDirection: 'horizontal',
         ...TransitionPresets.SlideFromRightIOS,
       }}>
-      <FavoritesStack.Screen name="MyJobs" component={MyJobsScreen} />
+      <FavoritesStack.Screen
+        name="MyJobs"
+        component={MyJobsScreen}
+        options={{headerShown: false}}
+      />
     </FavoritesStack.Navigator>
   );
 }

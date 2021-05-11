@@ -28,12 +28,6 @@ export default function LoginScreen() {
   const [passwordText, setPasswordText] = useState('');
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-  useEffect(() => {
-    navigation.setOptions({
-      header: () => null,
-    });
-  }, []);
-
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
 

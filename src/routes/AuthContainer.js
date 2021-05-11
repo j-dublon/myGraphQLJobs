@@ -12,7 +12,11 @@ export default function AuthContainer(props) {
         gestureDirection: 'horizontal',
         ...TransitionPresets.SlideFromRightIOS,
       }}>
-      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{headerShown: false}}
+      />
     </AuthStack.Navigator>
   );
 }

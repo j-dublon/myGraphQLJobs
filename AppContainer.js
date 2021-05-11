@@ -1,8 +1,7 @@
 import React from 'react';
 import AppStack from './src/navigation/AppStack';
-import HomeScreen from './src/screens/home/HomeScreen';
+import AuthContainer from './src/routes/AuthContainer';
 import TabContainer from './src/routes/TabContainer';
-// import AuthContainer from './routes/AuthContainer';
 // import useLoading from './hooks/loading/useLoading';
 // import LoadingView from './components/utility/LoadingView';
 
@@ -12,18 +11,13 @@ export default function AppContainer() {
   return (
     <>
       <AppStack.Navigator headerMode="screen">
-        {/* <AppStack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{headerShown: false}}
-        /> */}
-        {/* <AppStack.Screen
+        <AppStack.Screen
           name="AuthContainer"
           component={AuthContainer}
           options={{
             headerShown: false,
           }}
-        /> */}
+        />
         <AppStack.Screen
           name="TabContainer"
           component={TabContainer}

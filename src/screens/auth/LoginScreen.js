@@ -38,9 +38,9 @@ export default function LoginScreen() {
 
   const onPressLogin = () => console.log('LOGIN');
 
-  const onPressRegister = () => console.log('REGISTER');
+  const onPressRegister = () => navigation.navigate('Register');
 
-  const onPressForgotPassword = () => console.log('FORGOT');
+  const onPressForgotPassword = () => navigation.navigate('ForgotPassword');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

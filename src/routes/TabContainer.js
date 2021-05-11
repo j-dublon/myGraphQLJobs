@@ -21,11 +21,11 @@ export default function TabContainer(props) {
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const getVisibility = ({route}) => {
-    // const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-    // if (routeName === 'Calendar') {
-    //   return false;
-    // }
-    // return true;
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+    if (routeName === 'Calendar') {
+      return false;
+    }
+    return true;
   };
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
@@ -45,7 +45,7 @@ export default function TabContainer(props) {
     },
   });
   // ** ** ** ** ** RENDER ** ** ** ** **
-  const TabBarIcon = ({name, color}) => {
+  const TabBarIcon = ({name}) => {
     const icons = {
       home: faHome,
       heart: faHeart,
@@ -76,10 +76,8 @@ export default function TabContainer(props) {
         name="HomeContainer"
         component={HomeContainer}
         options={({route}) => ({
-          // tabBarVisible: getVisibility(route),
-          tabBarIcon: ({tintColor}) => (
-            <TabBarIcon name="home" color={tintColor} />
-          ),
+          tabBarVisible: () => getVisibility(route),
+          tabBarIcon: () => <TabBarIcon name="home" />,
           tabBarLabel: 'Home',
         })}
       />
@@ -87,8 +85,8 @@ export default function TabContainer(props) {
         name="FavoritesContainer"
         component={FavoritesContainer}
         options={({route}) => ({
-          // tabBarVisible: getVisibility(route),
-          tabBarIcon: ({color}) => <TabBarIcon name="heart" color={color} />,
+          tabBarVisible: () => getVisibility(route),
+          tabBarIcon: () => <TabBarIcon name="heart" />,
           tabBarLabel: 'Mine',
         })}
       />
@@ -96,8 +94,8 @@ export default function TabContainer(props) {
         name="TrendsContainer"
         component={TrendsContainer}
         options={({route}) => ({
-          // tabBarVisible: getVisibility(route),
-          tabBarIcon: ({color}) => <TabBarIcon name="line" color={color} />,
+          tabBarVisible: () => getVisibility(route),
+          tabBarIcon: () => <TabBarIcon name="line" />,
           tabBarLabel: 'Trends',
         })}
       />

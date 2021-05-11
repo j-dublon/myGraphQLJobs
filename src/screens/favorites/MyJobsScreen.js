@@ -157,7 +157,7 @@ export default function MyJobsScreen() {
   return (
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
-        <NavigationHeader title="My Jobs" back={true} onCard={false} />
+        <NavigationHeader title="My Jobs" onCard={false} />
         <FlatList
           data={fakeData}
           renderItem={({item, index}) => renderCard(item, index)}

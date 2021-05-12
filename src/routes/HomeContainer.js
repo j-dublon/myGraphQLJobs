@@ -23,7 +23,7 @@ export default function HomeContainer(props) {
       <HomeStack.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false, tabBarVisible: false}}
       />
       <HomeStack.Screen
         name="Preferences"

@@ -21,7 +21,8 @@ export default function TabContainer(props) {
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const getVisibility = ({route}) => {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+    const routeName = getFocusedRouteNameFromRoute(route) || route.name;
+
     if (
       routeName === 'Profile' ||
       routeName === 'ChangePassword' ||
@@ -67,7 +68,6 @@ export default function TabContainer(props) {
 
   return (
     <BottomTab.Navigator
-      // options={{headerShown: false}}
       tabBarOptions={{
         tabStyle: styles.item,
         style: styles.tabBar,
@@ -80,7 +80,7 @@ export default function TabContainer(props) {
         name="HomeContainer"
         component={HomeContainer}
         options={({route}) => ({
-          tabBarVisible: () => getVisibility(route),
+          // tabBarVisible: () => getVisibility(route),
           tabBarIcon: () => <TabBarIcon name="home" />,
           tabBarLabel: 'Home',
         })}

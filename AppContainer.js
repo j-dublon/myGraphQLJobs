@@ -11,13 +11,13 @@ export default function AppContainer() {
   return (
     <>
       <AppStack.Navigator headerMode="screen">
-        <AppStack.Screen
+        {/* <AppStack.Screen
           name="AuthContainer"
           component={AuthContainer}
           options={{
             headerShown: false,
           }}
-        />
+        /> */}
         <AppStack.Screen
           name="TabContainer"
           component={TabContainer}

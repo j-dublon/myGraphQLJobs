@@ -6,6 +6,7 @@
 #import <React/RCTLinkingManager.h>
 
 #ifdef FB_SONARKIT_ENABLED
+#import "RNSplashScreen.h"
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
 #import <FlipperKitUserDefaultsPlugin/FKUserDefaultsPlugin.h>
@@ -48,6 +49,7 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [RNSplashScreen show]; 
   return YES;
 }
 

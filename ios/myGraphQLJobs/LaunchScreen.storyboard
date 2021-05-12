@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -16,17 +15,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="Ak4-B3-4wL">
-                                <rect key="frame" x="20" y="83.5" width="335" height="500"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="lhQ-YJ-nqn">
+                                <rect key="frame" x="16" y="0.0" width="343" height="667"/>
                             </imageView>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="0.078431372549019607" green="0.078431372549019607" blue="0.078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Ak4-B3-4wL" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Gyd-9z-gql"/>
-                            <constraint firstItem="Ak4-B3-4wL" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="MBS-4o-3uO"/>
-                            <constraint firstItem="Ak4-B3-4wL" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="20" id="XoQ-0F-GaI"/>
-                            <constraint firstAttribute="trailing" secondItem="Ak4-B3-4wL" secondAttribute="trailing" constant="20" id="y66-En-GXH"/>
+                            <constraint firstItem="lhQ-YJ-nqn" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="4h3-rY-3FU"/>
+                            <constraint firstItem="lhQ-YJ-nqn" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="topMargin" id="GgF-0y-Q4W"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="lhQ-YJ-nqn" secondAttribute="trailing" id="VyT-TA-5jh"/>
+                            <constraint firstItem="lhQ-YJ-nqn" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="topMargin" id="nB1-Qs-XzS"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="lhQ-YJ-nqn" secondAttribute="bottom" id="wQN-bh-xX0"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -36,6 +35,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="logo" width="500" height="500"/>
+        <image name="LaunchScreen" width="270" height="480"/>
     </resources>
 </document>

@@ -1,12 +1,12 @@
 import React from 'react';
 import HomeStack from '../navigation/HomeStack';
 import {TransitionPresets} from '@react-navigation/stack';
-import HomeScreen from '../screens/home/HomeScreen';
+import TabContainer from '../routes/TabContainer';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import PreferencesScreen from '../screens/profile/PreferencesScreen';
 import ChangePasswordScreen from '../screens/profile/ChangePasswordScreen';
 
-export default function HomeContainer(props) {
+export default function HomeContainer() {
   return (
     <HomeStack.Navigator
       headerMode="screen"
@@ -16,8 +16,8 @@ export default function HomeContainer(props) {
         ...TransitionPresets.SlideFromRightIOS,
       }}>
       <HomeStack.Screen
-        name="Home"
-        component={HomeScreen}
+        name="HomeTabs"
+        component={TabContainer}
         options={{headerShown: false}}
       />
       <HomeStack.Screen

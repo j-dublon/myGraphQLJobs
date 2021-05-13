@@ -3,38 +3,21 @@ import {StyleSheet} from 'react-native';
 import BottomTab from '../navigation/BottomTab';
 import {ScaleHook} from 'react-native-design-to-component';
 import useTheme from '../hooks/theme/UseTheme';
-import HomeContainer from '../routes/HomeContainer';
+import HomeScreen from '../screens/home/HomeScreen';
 import FavoritesContainer from '../routes/FavoritesContainer';
 import TrendsContainer from '../routes/TrendsContainer';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome, faHeart, faChartLine} from '@fortawesome/free-solid-svg-icons';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 
-export default function TabContainer(props) {
+export default function TabContainer() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
-  const {getHeight, getWidth, fontSize} = ScaleHook();
+  const {getHeight} = ScaleHook();
   const {colors, textStyles} = useTheme();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
-
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-
   // ** ** ** ** ** LOGIC ** ** ** ** **
-  const getVisibility = ({route}) => {
-    const routeName = getFocusedRouteNameFromRoute(route) || route.name;
-
-    if (
-      routeName === 'Profile' ||
-      routeName === 'ChangePassword' ||
-      routeName === 'Preferences'
-    ) {
-      return false;
-    }
-    return true;
-  };
-
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
     tabBar: {
@@ -49,6 +32,7 @@ export default function TabContainer(props) {
       ...textStyles.bold12_noColor,
     },
   });
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   const TabBarIcon = ({name}) => {
     const icons = {
@@ -77,10 +61,9 @@ export default function TabContainer(props) {
         activeBackgroundColor: colors.darkPink70,
       }}>
       <BottomTab.Screen
-        name="HomeContainer"
-        component={HomeContainer}
+        name="Home"
+        component={HomeScreen}
         options={({route}) => ({
-          // tabBarVisible: () => getVisibility(route),
           tabBarIcon: () => <TabBarIcon name="home" />,
           tabBarLabel: 'Home',
         })}
@@ -89,7 +72,6 @@ export default function TabContainer(props) {
         name="FavoritesContainer"
         component={FavoritesContainer}
         options={({route}) => ({
-          tabBarVisible: () => getVisibility(route),
           tabBarIcon: () => <TabBarIcon name="heart" />,
           tabBarLabel: 'Mine',
         })}
@@ -98,7 +80,6 @@ export default function TabContainer(props) {
         name="TrendsContainer"
         component={TrendsContainer}
         options={({route}) => ({
-          tabBarVisible: () => getVisibility(route),
           tabBarIcon: () => <TabBarIcon name="line" />,
           tabBarLabel: 'Trends',
         })}

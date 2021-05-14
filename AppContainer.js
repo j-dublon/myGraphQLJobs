@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import AppStack from './src/navigation/AppStack';
 import AuthContainer from './src/routes/AuthContainer';
 import HomeContainer from './src/routes/HomeContainer';
-import TabContainer from './src/routes/TabContainer';
 // import useLoading from './hooks/loading/useLoading';
 // import LoadingView from './components/utility/LoadingView';
 import SplashScreen from 'react-native-splash-screen';

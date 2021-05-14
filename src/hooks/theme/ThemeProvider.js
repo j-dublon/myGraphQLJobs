@@ -84,6 +84,11 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(16),
       color: colors.limeGreen,
     },
+    regular16_midPink: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(16),
+      color: colors.midPink,
+    },
     regular16_pink: {
       fontFamily: fonts.regular,
       fontSize: fontSize(16),

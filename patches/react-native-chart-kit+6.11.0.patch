@@ -1,0 +1,46 @@
+diff --git a/node_modules/react-native-chart-kit/dist/BarChart.js b/node_modules/react-native-chart-kit/dist/BarChart.js
+index 429d7d9..a52096e 100644
+--- a/node_modules/react-native-chart-kit/dist/BarChart.js
++++ b/node_modules/react-native-chart-kit/dist/BarChart.js
+@@ -112,10 +112,10 @@ var BarChart = /** @class */ (function (_super) {
+                 }
+         };
+         return (<View style={style}>
+-        <Svg height={height} width={width}>
++        <Svg height={height + 25} width={width + 30}>
+           {this.renderDefs(__assign(__assign({}, config), this.props.chartConfig))}
+           {this.renderColors(__assign(__assign({}, this.props.chartConfig), { flatColor: flatColor, data: this.props.data.datasets }))}
+-          <Rect width="100%" height={height} rx={borderRadius} ry={borderRadius} fill="url(#backgroundGradient)"/>
++          <Rect width="100%" height={height + 25} rx={borderRadius} ry={borderRadius} fill="url(#backgroundGradient)"/>
+           <G>
+             {withInnerLines
+             ? this.renderHorizontalLines(__assign(__assign({}, config), { count: segments, paddingTop: paddingTop }))
+@@ -123,16 +123,16 @@ var BarChart = /** @class */ (function (_super) {
+           </G>
+           <G>
+             {withHorizontalLabels
+-            ? this.renderHorizontalLabels(__assign(__assign({}, config), { count: segments, data: data.datasets[0].data, paddingTop: paddingTop, paddingRight: paddingRight }))
++            ? this.renderHorizontalLabels(__assign(__assign({}, config), { count: segments, data: data.datasets[0].data, paddingTop: paddingTop, paddingRight: 35 }))
+             : null}
+           </G>
+           <G>
+             {withVerticalLabels
+-            ? this.renderVerticalLabels(__assign(__assign({}, config), { labels: data.labels, paddingRight: paddingRight, paddingTop: paddingTop, horizontalOffset: barWidth * this.getBarPercentage() }))
++            ? this.renderVerticalLabels(__assign(__assign({}, config), { labels: data.labels, paddingRight: 30, paddingTop: 7, horizontalOffset: barWidth * this.getBarPercentage() }))
+             : null}
+           </G>
+           <G>
+-            {this.renderBars(__assign(__assign({}, config), { data: data.datasets[0].data, paddingTop: paddingTop, paddingRight: paddingRight, withCustomBarColorFromData: withCustomBarColorFromData }))}
++            {this.renderBars(__assign(__assign({}, config), { data: data.datasets[0].data, paddingTop: paddingTop, paddingRight: 35, withCustomBarColorFromData: withCustomBarColorFromData }))}
+           </G>
+           <G>
+             {showValuesOnTopOfBars &&
+@@ -140,7 +140,7 @@ var BarChart = /** @class */ (function (_super) {
+           </G>
+           <G>
+             {showBarTops &&
+-            this.renderBarTops(__assign(__assign({}, config), { data: data.datasets[0].data, paddingTop: paddingTop, paddingRight: paddingRight }))}
++            this.renderBarTops(__assign(__assign({}, config), { data: data.datasets[0].data, paddingTop: paddingTop, paddingRight: 35 }))}
+           </G>
+         </Svg>
+       </View>);

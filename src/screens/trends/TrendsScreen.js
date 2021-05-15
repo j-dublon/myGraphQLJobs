@@ -31,8 +31,8 @@ export default function TrendsScreen() {
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [selected, setSelected] = useState('left');
-  const leftText = 'The best cities for GraphQL jobs in your country';
-  const rightText = 'On site vs. remote in your city';
+  const leftText = 'The best cities for GraphQL jobs in (your country)';
+  const rightText = 'On site vs. remote in (your city)';
   const location = selected === 'left' ? 'country' : 'city';
 
   const pieData = [

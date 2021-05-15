@@ -20,6 +20,7 @@ import AuthCard from '../../components/cards/AuthCard';
 import TopTabs from '../../components/buttons/TopTabs';
 import Pie from 'react-native-pie';
 import Spacer from '../../components/utility/Spacer';
+import {BarChart} from 'react-native-chart-kit';
 
 const background = require('../../../assets/images/background.png');
 
@@ -34,7 +35,7 @@ export default function TrendsScreen() {
   const rightText = 'On site vs. remote in your city';
   const location = selected === 'left' ? 'country' : 'city';
 
-  const data = [
+  const pieData = [
     {
       percentage: 30,
       color: colors.midPink,
@@ -44,6 +45,30 @@ export default function TrendsScreen() {
       color: colors.limeGreen,
     },
   ];
+
+  const barData = {
+    labels: ['San Francisco', 'Detroit', 'New York', 'Los Angeles'],
+    datasets: [
+      {
+        data: [20, 45, 28, 80],
+      },
+    ],
+  };
+
+  const chartConfig = {
+    color: (opacity = 1) => `rgba(0, 200, 0, ${opacity})`,
+    decimalPlaces: 0,
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false,
+    fillShadowGradient: 'rgba(0, 200, 0, 1)',
+    fillShadowGradientOpacity: 1,
+    propsForVerticalLabels: {
+      ...textStyles.regular10_limeGreen,
+    },
+    propsForHorizontalLabels: {
+      ...textStyles.regular10_limeGreen,
+    },
+  };
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
@@ -77,6 +102,9 @@ export default function TrendsScreen() {
     onSiteLabel: {
       ...textStyles.regular16_midPink,
     },
+    graphStyle: {
+      borderRadius: radius(10),
+    },
     textContainer: {
       marginTop: getHeight(40),
       alignItems: 'center',
@@ -108,16 +136,27 @@ export default function TrendsScreen() {
             setSelected={setSelected}
           />
           <Spacer height={70} />
-          <Pie radius={100} sections={data} strokeCap={'butt'} />
-          <View style={styles.remoteContainer}>
-            <Text style={styles.remoteLabel}>remote</Text>
-          </View>
-          <View style={styles.onSiteContainer}>
-            <Text style={styles.onSiteLabel}>on site</Text>
-          </View>
-          <View>
-            <Text>Remote</Text>
-          </View>
+          {selected === 'right' ? (
+            <>
+              <Pie radius={100} sections={pieData} strokeCap={'butt'} />
+              <View style={styles.remoteContainer}>
+                <Text style={styles.remoteLabel}>remote</Text>
+              </View>
+              <View style={styles.onSiteContainer}>
+                <Text style={styles.onSiteLabel}>on site</Text>
+              </View>
+            </>
+          ) : (
+            <BarChart
+              style={styles.graphStyle}
+              data={barData}
+              width={280}
+              height={200}
+              chartConfig={chartConfig}
+              verticalLabelRotation={20}
+              fromZero={true}
+            />
+          )}
           <View style={styles.textContainer}>
             <Text style={styles.text}>
               {selected === 'left' ? leftText : rightText}

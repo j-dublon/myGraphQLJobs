@@ -79,6 +79,11 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(30),
       color: colors.white,
     },
+    regular10_limeGreen: {
+      fontFamily: fonts.regular,
+      fontSize: fontSize(9.5),
+      color: colors.limeGreen,
+    },
     regular16_limeGreen: {
       fontFamily: fonts.regular,
       fontSize: fontSize(16),

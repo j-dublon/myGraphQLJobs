@@ -6,8 +6,8 @@
  * Copyright (c) 2021 The Distance
  */
 
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, ImageBackground, TextInput} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, View, Text, ImageBackground, TextInput, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -15,6 +15,7 @@ import NavigationHeader from '../../components/headers/NavigationHeader';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import AuthCard from '../../components/cards/AuthCard';
+import { Auth } from 'aws-amplify';
 
 const background = require('../../../assets/images/background.png');
 
@@ -27,7 +28,7 @@ const fakeUserData = {
 export default function ProfileScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
@@ -37,8 +38,17 @@ export default function ProfileScreen() {
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
-  // e.g. syncing data, e.g. register a user, can be called by an action
-
+  const logout = async () => {
+    await Auth.signOut()
+      .then(res => {
+        navigation.reset({
+        index: 0,
+        routes: [{name: 'AuthContainer'}],
+      });
+      })
+      .catch(err => console.log(err, "<---log out error"))
+  }
+  
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onChangeName = text => setNameText(text);
 
@@ -49,6 +59,8 @@ export default function ProfileScreen() {
   const onChangePassword = () => navigation.navigate('ChangePassword');
 
   const onPressPreferences = () => navigation.navigate('Preferences');
+
+  const onPressLogout = () => logout();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -70,6 +82,10 @@ export default function ProfileScreen() {
       ...textStyles.regular16_white,
       backgroundColor: colors.darkPink,
     },
+    logoutText: {
+      ...textStyles.bold20_limeGreen,
+      textDecorationLine: 'underline'
+    }
   });
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -99,7 +115,11 @@ export default function ProfileScreen() {
           <Spacer height={60} />
           <DefaultButton text="Change password" onPress={onChangePassword} />
           <Spacer height={30} />
-          <DefaultButton text="Preferences" onPress={onPressPreferences} />
+          <DefaultButton text="Preferences" onPress={ onPressPreferences } />
+          <Spacer height={ 30 } />
+          <TouchableOpacity onPress={onPressLogout} style={styles.logoutTouch}>
+            <Text style={styles.logoutText}>Log out</Text>
+          </TouchableOpacity>
         </AuthCard>
       </ImageBackground>
     </View>

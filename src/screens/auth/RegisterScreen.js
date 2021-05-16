@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,6 +6,7 @@ import {
   ImageBackground,
   TextInput,
   Switch,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -15,6 +16,7 @@ import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
 import { Auth } from 'aws-amplify';
+import { emailRegex, passwordRegex } from '../../utils/regex';
 
 const background = require('../../../assets/images/background.png');
 
@@ -25,7 +27,6 @@ export default function RegisterScreen() {
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
-  const [nameText, setNameText] = useState('');
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
   const [receiveEmails, setReceiveEmails] = useState(false);
@@ -33,18 +34,40 @@ export default function RegisterScreen() {
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const register = async () => {
+
+    if (!emailRegex.test(emailText)) {
+      Alert.alert('', 'Please enter a valid email address');
+      return;
+    }
+
+    if (!passwordRegex.test(passwordText)) {
+      Alert.alert('', 'Your password must contain at least 8 characters, including an upper and lower case character and a special character');
+      return;
+    }
   
     await Auth.signUp({
       username: emailText,
       password: passwordText,
     })
-      .then(res => console.log(res, "<---sign up res"))
-      .catch(err => console.log(err, "<---sign up error"))
+      .then(res => {
+        console.log(res, "<---sign up res");
+        Alert.alert('', 'Please click the link we have sent to your email address to activate your account', [{ text: 'Ok', onPress: () => navigation.goBack() }]);
+        setEmailText('');
+        setPasswordText('');
+      })
+      .catch(err => {
+        console.log(err, "<---sign up error");
+
+        if (err.code === "UsernameExistsException") {
+          Alert.alert('', 'An account with that email address already exists')
+        }
+
+        setEmailText('');
+        setPasswordText('');
+      })
   }
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-  const onChangeName = text => setNameText(text);
-
   const onChangeEmail = text => setEmailText(text);
 
   const onChangePassword = text => setPasswordText(text);
@@ -104,14 +127,6 @@ export default function RegisterScreen() {
           <Spacer height={70} />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeName}
-            value={nameText}
-            placeholder="name..."
-            placeholderTextColor={colors.white}
-          />
-          <Spacer height={30} />
-          <TextInput
-            style={styles.input}
             onChangeText={onChangeEmail}
             value={emailText}
             placeholder="email..."
@@ -126,7 +141,7 @@ export default function RegisterScreen() {
             placeholderTextColor={colors.white}
             secureTextEntry={true}
           />
-          <Spacer height={30} />
+          <Spacer height={50} />
           <View style={styles.switchContainer}>
             <View style={styles.switchTextContainer}>
               <Text style={styles.switchText}>

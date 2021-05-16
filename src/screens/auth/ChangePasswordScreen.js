@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
+  Text,
   ImageBackground,
   TextInput,
 } from 'react-native';
@@ -12,11 +13,10 @@ import AuthCard from '../../components/cards/AuthCard';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
-import { Auth } from 'aws-amplify';
 
 const background = require('../../../assets/images/background.png');
 
-export default function ForgotPassword() {
+export default function ChangePassword() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
@@ -32,11 +32,7 @@ export default function ForgotPassword() {
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onChangeEmail = text => setEmailText(text);
 
-  const onPressSend = async () => {
-    await Auth.forgotPassword(username)
-      .then(data => console.log(data, "<---forgot password res"))
-      .catch(err => console.log(err, "<---forgot password error"));
-  };
+  const onPressSend = () => console.log('SEND');
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

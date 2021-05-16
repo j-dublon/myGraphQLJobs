@@ -4,6 +4,7 @@ import {
   View,
   ImageBackground,
   TextInput,
+  Alert
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -13,6 +14,7 @@ import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
 import { Auth } from 'aws-amplify';
+import { emailRegex } from '../../utils/regex';
 
 const background = require('../../../assets/images/background.png');
 
@@ -33,8 +35,17 @@ export default function ForgotPassword() {
   const onChangeEmail = text => setEmailText(text);
 
   const onPressSend = async () => {
-    await Auth.forgotPassword(username)
-      .then(data => console.log(data, "<---forgot password res"))
+    if (!emailText || !emailRegex.test(emailText)) {
+      Alert.alert('', 'Please ensure you enter your email address correctly');
+      return;
+    }
+
+    await Auth.forgotPassword(emailText)
+      .then(data => {
+        console.log(data, "<---forgot password res");
+        setEmailText('');
+        Alert.alert('', 'Please check your emails for the code we have sent you', [{ text: 'Ok', onPress: () => navigation.navigate('ChangePassword', {username: emailText}) }]);
+      })
       .catch(err => console.log(err, "<---forgot password error"));
   };
 

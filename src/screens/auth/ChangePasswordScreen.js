@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   ImageBackground,
   TextInput,
+  Alert
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -13,26 +13,66 @@ import AuthCard from '../../components/cards/AuthCard';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
+import { Auth } from 'aws-amplify';
+import { passwordRegex } from '../../utils/regex';
 
 const background = require('../../../assets/images/background.png');
 
-export default function ChangePassword() {
+export default function ChangePassword({route}) {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth} = ScaleHook();
+  const { getHeight, getWidth } = ScaleHook();
+  const { username } = route.params;
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
-  const [emailText, setEmailText] = useState('');
+  const [codeText, setCodeText] = useState('');
+  const [passwordText, setPasswordText] = useState('');
+  const [confirmPasswordText, setConfirmPasswordText] = useState('');
+
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-  const onChangeEmail = text => setEmailText(text);
+  const onChangeCode = text => setCodeText(text);
 
-  const onPressSend = () => console.log('SEND');
+  const onChangePassword = text => setPasswordText(text);
+
+  const onChangeConfirmPassword = text => setConfirmPasswordText(text);
+
+  const onPressSubmit = async () => {
+    if (passwordText !== confirmPasswordText) {
+      Alert.alert('', 'Passwords do not match');
+      setPasswordText('');
+      setConfirmPasswordText('');
+      return;
+    }
+
+    if (!passwordRegex.test(passwordText)) {
+      Alert.alert('', 'Your password must contain at least 8 characters, including an upper and lower case character and a special character');
+      setPasswordText('');
+      setConfirmPasswordText('');
+      return;
+    }
+
+    await Auth.forgotPasswordSubmit(username, codeText, passwordText)
+      .then(data => {
+        setCodeText('');
+        setPasswordText('');
+        setConfirmPasswordText('');
+        navigation.navigate('Login');
+      })
+      .catch(err => {
+        console.log(err, "<---- change password error");
+
+        if (err.code === "CodeMismatchException") {
+          Alert.alert('', 'Please ensure you enter the code correctly');
+          setCodeText('');
+        }
+      });
+  };
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -70,18 +110,36 @@ export default function ChangePassword() {
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
-          <NavigationHeader title="Email me" back={true} onCard={true} />
+          <NavigationHeader title="Password" back={true} onCard={true} />
           <Spacer height={70} />
           <TextInput
             style={styles.input}
-            onChangeText={onChangeEmail}
-            value={emailText}
-            placeholder="email..."
+            onChangeText={onChangeCode}
+            value={codeText}
+            placeholder="code..."
             placeholderTextColor={colors.white}
+          />
+          <Spacer height={ 30 } />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangePassword}
+            value={passwordText}
+            placeholder="password..."
+            placeholderTextColor={ colors.white }
+            secureTextEntry={true}
+          />
+          <Spacer height={ 30 } />
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeConfirmPassword}
+            value={confirmPasswordText}
+            placeholder="confirm password..."
+            placeholderTextColor={ colors.white }
+            secureTextEntry={true}
           />
           <Spacer height={50} />
           <View style={styles.buttonContainer}>
-            <DefaultButton text="Send" onPress={onPressSend} />
+            <DefaultButton text="Submit" onPress={onPressSubmit} />
           </View>
         </AuthCard>
       </ImageBackground>

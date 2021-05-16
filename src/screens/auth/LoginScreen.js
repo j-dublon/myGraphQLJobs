@@ -44,7 +44,7 @@ export default function LoginScreen() {
         console.log(res, "<----sign in res");
         setEmailText('');
         setPasswordText('');
-        // navigate to home screen
+        navigation.navigate('HomeContainer');
         
       })
       .catch(err => {
@@ -56,6 +56,10 @@ export default function LoginScreen() {
 
         if (err.code === 'UserNotFoundException') {
           Alert.alert('', 'No account found for that email address, please register to continue')
+        }
+
+        if (err.code === "NotAuthorizedException") {
+          Alert.alert('', 'Incorrect password')
         }
 
         setEmailText('');

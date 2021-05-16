@@ -4,6 +4,7 @@ import {TransitionPresets} from '@react-navigation/stack';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import ChangePasswordScreen from '../screens/auth/ChangePasswordScreen';
 
 export default function AuthContainer(props) {
   return (
@@ -27,6 +28,11 @@ export default function AuthContainer(props) {
       <AuthStack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
+        options={{headerShown: false}}
+      />
+      <AuthStack.Screen
+        name="ChangePassword"
+        component={ChangePasswordScreen}
         options={{headerShown: false}}
       />
     </AuthStack.Navigator>

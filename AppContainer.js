@@ -22,13 +22,13 @@ export default function AppContainer() {
             headerShown: false,
           }}
         />
-        {/* <AppStack.Screen
+        <AppStack.Screen
           name="HomeContainer"
           component={HomeContainer}
           options={{
             headerShown: false,
           }}
-        /> */}
+        />
       </AppStack.Navigator>
       {/* {loading && LoadingView()} */}
     </>

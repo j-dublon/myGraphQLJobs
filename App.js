@@ -5,6 +5,15 @@ import AppContainer from './AppContainer';
 import ThemeProvider from './src/hooks/theme/ThemeProvider';
 import {ScaleProvider} from 'react-native-design-to-component';
 import QuickPicker from 'quick-picker';
+import Amplify from 'aws-amplify';
+import config from './aws-exports';
+
+Amplify.configure({
+  ...config,
+  Analytics: {
+    disabled: true,
+  },
+});
 
 const App = () => {
   useEffect(() => {

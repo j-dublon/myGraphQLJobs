@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "mygraphqljobse364b18d": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}

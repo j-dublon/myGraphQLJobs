@@ -14,6 +14,7 @@ import AuthCard from '../../components/cards/AuthCard';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
+import { Auth } from 'aws-amplify';
 
 const background = require('../../../assets/images/background.png');
 
@@ -31,7 +32,15 @@ export default function RegisterScreen() {
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
-  // e.g. syncing data, e.g. register a user, can be called by an action
+  const register = async () => {
+  
+    await Auth.signUp({
+      username: emailText,
+      password: passwordText,
+    })
+      .then(res => console.log(res, "<---sign up res"))
+      .catch(err => console.log(err, "<---sign up error"))
+  }
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onChangeName = text => setNameText(text);
@@ -42,7 +51,7 @@ export default function RegisterScreen() {
 
   const toggleSwitch = () => setReceiveEmails(!receiveEmails);
 
-  const onPressRegister = () => console.log('REGISTER');
+  const onPressRegister = () => register();
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({

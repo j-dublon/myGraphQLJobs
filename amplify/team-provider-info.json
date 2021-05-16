@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mygraphqljobs-dev-184913-authRole",
+      "UnauthRoleArn": "arn:aws:iam::612359078298:role/amplify-mygraphqljobs-dev-184913-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::612359078298:role/amplify-mygraphqljobs-dev-184913-authRole",
+      "Region": "eu-west-2",
+      "DeploymentBucketName": "amplify-mygraphqljobs-dev-184913-deployment",
+      "UnauthRoleName": "amplify-mygraphqljobs-dev-184913-unauthRole",
+      "StackName": "amplify-mygraphqljobs-dev-184913",
+      "StackId": "arn:aws:cloudformation:eu-west-2:612359078298:stack/amplify-mygraphqljobs-dev-184913/0bf67b60-b66f-11eb-b803-02815cf1e954",
+      "AmplifyAppId": "d387m2fmpe023"
+    },
+    "categories": {
+      "auth": {
+        "mygraphqljobse364b18d": {}
+      }
+    }
+  }
+}

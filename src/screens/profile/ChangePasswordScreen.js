@@ -6,8 +6,14 @@
  * Copyright (c) 2021 The Distance
  */
 
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, TextInput, ImageBackground} from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  ImageBackground,
+  Alert,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -15,13 +21,15 @@ import AuthCard from '../../components/cards/AuthCard';
 import NavigationHeader from '../../components/headers/NavigationHeader';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
+import {Auth} from 'aws-amplify';
+import {passwordRegex} from '../../utils/regex';
 
 const background = require('../../../assets/images/background.png');
 
 export default function ChangePasswordScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {getHeight, getWidth} = ScaleHook();
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
@@ -40,6 +48,56 @@ export default function ChangePasswordScreen() {
   const onChangeNewPassword = text => setNewPassword(text);
 
   const onChangeConfirmNewPassword = text => setConfirmNewPassword(text);
+
+  const onPressSave = () => {
+    if (newPassword !== confirmNewPassword) {
+      Alert.alert('', 'New password does not match');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      return;
+    }
+
+    if (!passwordRegex.test(oldPassword)) {
+      Alert.alert(
+        '',
+        'Please ensure you have entered your current password correctly',
+      );
+      setOldPassword('');
+      return;
+    }
+
+    if (!passwordRegex.test(newPassword)) {
+      Alert.alert(
+        '',
+        'Password must contain at least 8 characters, including an upper and lower case character and a special character',
+      );
+      setNewPassword('');
+      setConfirmNewPassword('');
+      return;
+    }
+
+    Auth.currentAuthenticatedUser()
+      .then(user => {
+        return Auth.changePassword(user, oldPassword, newPassword);
+      })
+      .then(data => {
+        console.log(data, '<----change password res');
+        setOldPassword('');
+        setNewPassword('');
+        setConfirmNewPassword('');
+        navigation.goBack();
+      })
+      .catch(err => {
+        console.log(err, '<--- change password error');
+        if (err.code === 'NotAuthorizedException') {
+          Alert.alert(
+            '',
+            'Please ensure you have entered your current password correctly',
+          );
+          setOldPassword('');
+        }
+      });
+  };
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -91,7 +149,7 @@ export default function ChangePasswordScreen() {
             placeholderTextColor={colors.white}
           />
           <Spacer height={60} />
-          <DefaultButton text="Save" />
+          <DefaultButton text="Save" onPress={onPressSave} />
         </AuthCard>
       </ImageBackground>
     </View>

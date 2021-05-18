@@ -15,8 +15,8 @@ import AuthCard from '../../components/cards/AuthCard';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
-import { Auth } from 'aws-amplify';
-import { emailRegex, passwordRegex } from '../../utils/regex';
+import {Auth} from 'aws-amplify';
+import {emailRegex, passwordRegex} from '../../utils/regex';
 
 const background = require('../../../assets/images/background.png');
 
@@ -34,38 +34,44 @@ export default function RegisterScreen() {
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const register = async () => {
-
     if (!emailRegex.test(emailText)) {
       Alert.alert('', 'Please enter a valid email address');
       return;
     }
 
     if (!passwordRegex.test(passwordText)) {
-      Alert.alert('', 'Your password must contain at least 8 characters, including an upper and lower case character and a special character');
+      Alert.alert(
+        '',
+        'Password must contain at least 8 characters, including an upper and lower case character and a special character',
+      );
       return;
     }
-  
+
     await Auth.signUp({
       username: emailText,
       password: passwordText,
     })
       .then(res => {
-        console.log(res, "<---sign up res");
-        Alert.alert('', 'Please click the link we have sent to your email address to activate your account', [{ text: 'Ok', onPress: () => navigation.goBack() }]);
+        console.log(res, '<---sign up res');
+        Alert.alert(
+          '',
+          'Please click the link we have sent to your email address to activate your account',
+          [{text: 'Ok', onPress: () => navigation.goBack()}],
+        );
         setEmailText('');
         setPasswordText('');
       })
       .catch(err => {
-        console.log(err, "<---sign up error");
+        console.log(err, '<---sign up error');
 
-        if (err.code === "UsernameExistsException") {
-          Alert.alert('', 'An account with that email address already exists')
+        if (err.code === 'UsernameExistsException') {
+          Alert.alert('', 'An account with that email address already exists');
         }
 
         setEmailText('');
         setPasswordText('');
-      })
-  }
+      });
+  };
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onChangeEmail = text => setEmailText(text);

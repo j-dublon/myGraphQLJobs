@@ -21,6 +21,7 @@ import {emailRegex, passwordRegex} from '../../utils/regex';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import QuickPicker from 'quick-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const background = require('../../../assets/images/background.png');
 
@@ -56,12 +57,26 @@ export default function RegisterScreen() {
       return;
     }
 
+    if (!selectedCountry || selectedCountry === '') {
+      Alert.alert('', 'Please select a country');
+      return;
+    }
+
+    if (!selectedCity || selectedCity === '') {
+      Alert.alert('', 'Please select a city');
+      return;
+    }
+
     await Auth.signUp({
       username: emailText,
       password: passwordText,
     })
-      .then(res => {
+      .then(async res => {
         console.log(res, '<---sign up res');
+
+        await AsyncStorage.setItem('@COUNTRY', selectedCountry);
+        await AsyncStorage.setItem('@CITY', selectedCity);
+
         Alert.alert(
           '',
           'Please click the link we have sent to your email address to activate your account',

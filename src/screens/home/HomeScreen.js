@@ -9,6 +9,7 @@ import JobCard from '../../components/cards/JobCard';
 import {format} from 'date-fns';
 import IconSwiperCard from '../../components/cards/IconSwiperCard';
 import BasicModal from '../../components/modals/BasicModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const background = require('../../../assets/images/background.png');
 
@@ -91,8 +92,23 @@ export default function HomeScreen() {
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
+  const [selectedCountry, setSelectedCountry] = useState();
+  const [selectedCity, setSelectedCity] = useState();
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+  useEffect(() => {
+    const getCountryAndCity = async () => {
+      const country = await AsyncStorage.getItem('@COUNTRY');
+      const city = await AsyncStorage.getItem('@CITY');
+
+      setSelectedCountry(country);
+      setSelectedCity(city);
+
+      return;
+    };
+
+    getCountryAndCity();
+  }, []);
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action

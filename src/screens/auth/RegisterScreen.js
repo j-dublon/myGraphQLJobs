@@ -7,6 +7,7 @@ import {
   TextInput,
   Switch,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -17,6 +18,9 @@ import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
 import {Auth} from 'aws-amplify';
 import {emailRegex, passwordRegex} from '../../utils/regex';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faChevronDown} from '@fortawesome/free-solid-svg-icons';
+import QuickPicker from 'quick-picker';
 
 const background = require('../../../assets/images/background.png');
 
@@ -29,7 +33,12 @@ export default function RegisterScreen() {
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState();
+  const [selectedCity, setSelectedCity] = useState();
   const [receiveEmails, setReceiveEmails] = useState(false);
+
+  const countryData = ['', 'Germany', 'USA', 'UK'];
+  const cityData = ['', 'London', 'Berlin', 'Amsterdam'];
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
@@ -78,6 +87,28 @@ export default function RegisterScreen() {
 
   const onChangePassword = text => setPasswordText(text);
 
+  const onPressCountry = () => {
+    QuickPicker.open({
+      items: countryData,
+      selectedValue: '',
+      onPressDone: value => {
+        setSelectedCountry(value);
+        QuickPicker.close();
+      },
+    });
+  };
+
+  const onPressCity = () => {
+    QuickPicker.open({
+      items: cityData,
+      selectedValue: '',
+      onPressDone: value => {
+        setSelectedCity(value);
+        QuickPicker.close();
+      },
+    });
+  };
+
   const toggleSwitch = () => setReceiveEmails(!receiveEmails);
 
   const onPressRegister = () => register();
@@ -105,6 +136,18 @@ export default function RegisterScreen() {
       paddingHorizontal: getWidth(7),
       ...textStyles.regular16_white,
     },
+    touch: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+    },
+    boxText: {
+      ...textStyles.regular16_white,
+    },
+    icon: {
+      color: colors.white,
+    },
     switchContainer: {
       flexDirection: 'row',
       width: '80%',
@@ -120,7 +163,7 @@ export default function RegisterScreen() {
       position: 'absolute',
       width: '100%',
       alignItems: 'center',
-      bottom: getHeight(60),
+      bottom: getHeight(40),
     },
   });
 
@@ -130,7 +173,7 @@ export default function RegisterScreen() {
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
           <NavigationHeader title="Register" back={true} onCard={true} />
-          <Spacer height={70} />
+          <Spacer height={40} />
           <TextInput
             style={styles.input}
             onChangeText={onChangeEmail}
@@ -147,7 +190,33 @@ export default function RegisterScreen() {
             placeholderTextColor={colors.white}
             secureTextEntry={true}
           />
-          <Spacer height={50} />
+          <Spacer height={30} />
+          <View style={styles.input}>
+            <TouchableOpacity style={styles.touch} onPress={onPressCountry}>
+              <Text style={styles.boxText}>
+                {selectedCountry ? selectedCountry : 'country...'}
+              </Text>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                style={styles.icon}
+                size={20}
+              />
+            </TouchableOpacity>
+          </View>
+          <Spacer height={30} />
+          <View style={styles.input}>
+            <TouchableOpacity style={styles.touch} onPress={onPressCity}>
+              <Text style={styles.boxText}>
+                {selectedCity ? selectedCity : 'city...'}
+              </Text>
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                style={styles.icon}
+                size={20}
+              />
+            </TouchableOpacity>
+          </View>
+          <Spacer height={25} />
           <View style={styles.switchContainer}>
             <View style={styles.switchTextContainer}>
               <Text style={styles.switchText}>
@@ -162,7 +231,6 @@ export default function RegisterScreen() {
               value={receiveEmails}
             />
           </View>
-          <Spacer height={50} />
           <View style={styles.buttonContainer}>
             <DefaultButton text="Register" onPress={onPressRegister} />
           </View>

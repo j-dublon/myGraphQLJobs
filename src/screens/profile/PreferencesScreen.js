@@ -6,7 +6,7 @@
  * Copyright (c) 2021 The Distance
  */
 
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -25,6 +25,7 @@ import AuthCard from '../../components/cards/AuthCard';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import QuickPicker from 'quick-picker';
+import useData from '../../hooks/data/useData';
 
 const background = require('../../../assets/images/background.png');
 
@@ -33,14 +34,17 @@ export default function PreferencesScreen() {
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
   const navigation = useNavigation();
+  const {
+    countryList,
+    cityList,
+    selectedCountry,
+    setSelectedCountry,
+    selectedCity,
+    setSelectedCity,
+  } = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [remoteOnly, setRemoteOnly] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState();
-  const [selectedCity, setSelectedCity] = useState();
-
-  const countryData = ['', 'Germany', 'USA', 'UK'];
-  const cityData = ['', 'London', 'Berlin', 'Amsterdam'];
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
@@ -49,9 +53,10 @@ export default function PreferencesScreen() {
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onPressCountry = () => {
     QuickPicker.open({
-      items: countryData,
+      items: countryList,
       selectedValue: '',
       onPressDone: value => {
+        setSelectedCity();
         setSelectedCountry(value);
         QuickPicker.close();
       },
@@ -60,7 +65,7 @@ export default function PreferencesScreen() {
 
   const onPressCity = () => {
     QuickPicker.open({
-      items: cityData,
+      items: cityList,
       selectedValue: '',
       onPressDone: value => {
         setSelectedCity(value);
@@ -135,7 +140,7 @@ export default function PreferencesScreen() {
           <View style={styles.box}>
             <TouchableOpacity style={styles.touch} onPress={onPressCountry}>
               <Text style={styles.boxText}>
-                {selectedCountry ? selectedCountry : 'Country...'}
+                {selectedCountry ? selectedCountry : 'country...'}
               </Text>
               <FontAwesomeIcon
                 icon={faChevronDown}
@@ -148,7 +153,7 @@ export default function PreferencesScreen() {
           <View style={styles.box}>
             <TouchableOpacity style={styles.touch} onPress={onPressCity}>
               <Text style={styles.boxText}>
-                {selectedCity ? selectedCity : 'City...'}
+                {selectedCity ? selectedCity : 'city...'}
               </Text>
               <FontAwesomeIcon
                 icon={faChevronDown}

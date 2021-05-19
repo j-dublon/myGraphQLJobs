@@ -7,12 +7,19 @@ import {ScaleProvider} from 'react-native-design-to-component';
 import QuickPicker from 'quick-picker';
 import Amplify from 'aws-amplify';
 import config from './aws-exports';
+import {ApolloProvider} from '@apollo/client';
+import {ApolloClient, InMemoryCache} from '@apollo/client';
 
 Amplify.configure({
   ...config,
   Analytics: {
     disabled: true,
   },
+});
+
+const client = new ApolloClient({
+  uri: 'https://api.graphql.jobs',
+  cache: new InMemoryCache(),
 });
 
 const App = () => {
@@ -22,13 +29,15 @@ const App = () => {
 
   return (
     <>
-      <ScaleProvider config={{height: 667, width: 375}}>
-        <NavigationContainer>
-          <ThemeProvider>
-            <AppContainer />
-          </ThemeProvider>
-        </NavigationContainer>
-      </ScaleProvider>
+      <ApolloProvider client={client}>
+        <ScaleProvider config={{height: 667, width: 375}}>
+          <NavigationContainer>
+            <ThemeProvider>
+              <AppContainer />
+            </ThemeProvider>
+          </NavigationContainer>
+        </ScaleProvider>
+      </ApolloProvider>
       <QuickPicker />
     </>
   );

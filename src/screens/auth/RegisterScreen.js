@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -22,6 +22,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import QuickPicker from 'quick-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useQuery} from '@apollo/client';
+import Countries from '../../apollo/queries/Countries';
 
 const background = require('../../../assets/images/background.png');
 
@@ -38,10 +40,40 @@ export default function RegisterScreen() {
   const [selectedCity, setSelectedCity] = useState();
   const [receiveEmails, setReceiveEmails] = useState(false);
 
-  const countryData = ['', 'Germany', 'USA', 'UK'];
-  const cityData = ['', 'London', 'Berlin', 'Amsterdam'];
+  const [countryData, setCountryData] = useState([]);
+  const [countryList, setCountryList] = useState([]);
+  const [cityList, setCityList] = useState([]);
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+  useQuery(Countries, {
+    fetchPolicy: 'no-cache',
+    onCompleted: res => {
+      console.log(res, '<---countries query res');
+      setCountryData(res.countries);
+    },
+    onError: error => console.log(error, '<---countries query error'),
+  });
+
+  useEffect(() => {
+    if (countryData.length > 0) {
+      let list = [''];
+      countryData.forEach(country => list.push(country.name));
+      setCountryList(list);
+    }
+  }, [countryData]);
+
+  useEffect(() => {
+    if (countryData.length > 0 && selectedCountry) {
+      let list = [''];
+      countryData.map(country => {
+        if (country.name === selectedCountry) {
+          country.cities.forEach(city => list.push(city.name));
+        }
+      });
+      setCityList(list);
+    }
+  }, [countryData, selectedCountry]);
+
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const register = async () => {
     if (!emailRegex.test(emailText)) {
@@ -104,9 +136,10 @@ export default function RegisterScreen() {
 
   const onPressCountry = () => {
     QuickPicker.open({
-      items: countryData,
+      items: countryList,
       selectedValue: '',
       onPressDone: value => {
+        setSelectedCity();
         setSelectedCountry(value);
         QuickPicker.close();
       },
@@ -115,7 +148,7 @@ export default function RegisterScreen() {
 
   const onPressCity = () => {
     QuickPicker.open({
-      items: cityData,
+      items: cityList,
       selectedValue: '',
       onPressDone: value => {
         setSelectedCity(value);

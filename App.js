@@ -9,6 +9,7 @@ import Amplify from 'aws-amplify';
 import config from './aws-exports';
 import {ApolloProvider} from '@apollo/client';
 import {ApolloClient, InMemoryCache} from '@apollo/client';
+import DataProvider from './src/hooks/data/DataProvider';
 
 Amplify.configure({
   ...config,
@@ -33,7 +34,9 @@ const App = () => {
         <ScaleProvider config={{height: 667, width: 375}}>
           <NavigationContainer>
             <ThemeProvider>
-              <AppContainer />
+              <DataProvider>
+                <AppContainer />
+              </DataProvider>
             </ThemeProvider>
           </NavigationContainer>
         </ScaleProvider>

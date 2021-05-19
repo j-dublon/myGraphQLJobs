@@ -22,8 +22,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import QuickPicker from 'quick-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useQuery} from '@apollo/client';
-import Countries from '../../apollo/queries/Countries';
+import useData from '../../hooks/data/useData';
 
 const background = require('../../../assets/images/background.png');
 
@@ -32,47 +31,25 @@ export default function RegisterScreen() {
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
   const navigation = useNavigation();
+  const {
+    getCountries,
+    countryList,
+    cityList,
+    selectedCountry,
+    setSelectedCountry,
+    selectedCity,
+    setSelectedCity,
+  } = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState();
-  const [selectedCity, setSelectedCity] = useState();
   const [receiveEmails, setReceiveEmails] = useState(false);
 
-  const [countryData, setCountryData] = useState([]);
-  const [countryList, setCountryList] = useState([]);
-  const [cityList, setCityList] = useState([]);
-
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-  useQuery(Countries, {
-    fetchPolicy: 'no-cache',
-    onCompleted: res => {
-      console.log(res, '<---countries query res');
-      setCountryData(res.countries);
-    },
-    onError: error => console.log(error, '<---countries query error'),
-  });
-
   useEffect(() => {
-    if (countryData.length > 0) {
-      let list = [''];
-      countryData.forEach(country => list.push(country.name));
-      setCountryList(list);
-    }
-  }, [countryData]);
-
-  useEffect(() => {
-    if (countryData.length > 0 && selectedCountry) {
-      let list = [''];
-      countryData.map(country => {
-        if (country.name === selectedCountry) {
-          country.cities.forEach(city => list.push(city.name));
-        }
-      });
-      setCityList(list);
-    }
-  }, [countryData, selectedCountry]);
+    getCountries();
+  }, []);
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const register = async () => {

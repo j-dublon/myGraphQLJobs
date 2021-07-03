@@ -105,19 +105,19 @@ export default function TrendsScreen() {
     },
     remoteContainer: {
       position: 'absolute',
-      top: getHeight(190),
-      right: getWidth(90),
+      top: getHeight(110),
+      right: getWidth(40),
     },
     remoteLabel: {
-      ...textStyles.regular16_limeGreen,
+      ...textStyles.bold16_midPink,
     },
     onSiteContainer: {
       position: 'absolute',
-      top: getHeight(250),
-      left: getWidth(90),
+      top: getHeight(310),
+      left: getWidth(20),
     },
     onSiteLabel: {
-      ...textStyles.regular16_midPink,
+      ...textStyles.regular16_limeGreen,
     },
     graphStyle: {
       borderRadius: radius(10),

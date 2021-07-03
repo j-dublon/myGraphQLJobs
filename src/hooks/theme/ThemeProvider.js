@@ -49,6 +49,11 @@ export default function ThemeProvider({children}) {
       fontSize: fontSize(16),
       color: colors.limeGreen,
     },
+    bold16_midPink: {
+      fontFamily: fonts.bold,
+      fontSize: fontSize(16),
+      color: colors.midPink,
+    },
     bold16_white: {
       fontFamily: fonts.bold,
       fontSize: fontSize(16),

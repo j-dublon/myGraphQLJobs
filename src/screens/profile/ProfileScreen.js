@@ -1,13 +1,12 @@
-/*
- * Jira Ticket:
- * Created Date: Mon, 3rd May 2021, 21:18:44 pm
- * Author: Jodi Dublon
- * Email: jodi.dublon@thedistance.co.uk
- * Copyright (c) 2021 The Distance
- */
-
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, ImageBackground, TextInput, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ImageBackground,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -15,7 +14,7 @@ import NavigationHeader from '../../components/headers/NavigationHeader';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import AuthCard from '../../components/cards/AuthCard';
-import { Auth } from 'aws-amplify';
+import {Auth} from 'aws-amplify';
 
 const background = require('../../../assets/images/background.png');
 
@@ -42,13 +41,13 @@ export default function ProfileScreen() {
     await Auth.signOut()
       .then(res => {
         navigation.reset({
-        index: 0,
-        routes: [{name: 'AuthContainer'}],
-      });
+          index: 0,
+          routes: [{name: 'AuthContainer'}],
+        });
       })
-      .catch(err => console.log(err, "<---log out error"))
-  }
-  
+      .catch(err => console.log(err, '<---log out error'));
+  };
+
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onChangeName = text => setNameText(text);
 
@@ -84,8 +83,8 @@ export default function ProfileScreen() {
     },
     logoutText: {
       ...textStyles.bold20_limeGreen,
-      textDecorationLine: 'underline'
-    }
+      textDecorationLine: 'underline',
+    },
   });
 
   // ** ** ** ** ** RENDER ** ** ** ** **
@@ -115,8 +114,8 @@ export default function ProfileScreen() {
           <Spacer height={60} />
           <DefaultButton text="Change password" onPress={onChangePassword} />
           <Spacer height={30} />
-          <DefaultButton text="Preferences" onPress={ onPressPreferences } />
-          <Spacer height={ 30 } />
+          <DefaultButton text="Preferences" onPress={onPressPreferences} />
+          <Spacer height={30} />
           <TouchableOpacity onPress={onPressLogout} style={styles.logoutTouch}>
             <Text style={styles.logoutText}>Log out</Text>
           </TouchableOpacity>

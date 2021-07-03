@@ -1,11 +1,3 @@
-/*
- * Jira Ticket:
- * Created Date: Wed, 5th May 2021, 22:21:32 pm
- * Author: Jodi Dublon
- * Email: jodi.dublon@thedistance.co.uk
- * Copyright (c) 2021 The Distance
- */
-
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,

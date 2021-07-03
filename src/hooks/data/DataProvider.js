@@ -1,10 +1,3 @@
-/*
- * Created Date: Thu, 14th Jan 2021, 16:39:16 pm
- * Author: Christos Demetriou
- * Email: christos.demetiou@thedistance.co.uk
- * Copyright (c) 2021 JM APP DEVELOPMENT LTD
- */
-
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useLazyQuery} from '@apollo/client';

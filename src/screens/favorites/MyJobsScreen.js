@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -11,7 +11,7 @@ import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import NavigationHeader from '../../components/headers/NavigationHeader';
 import BasicModal from '../../components/modals/BasicModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import useData from '../../hooks/data/useData';
 
 const background = require('../../../assets/images/background.png');
 
@@ -19,21 +19,13 @@ export default function MyJobsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth, radius} = ScaleHook();
+  const {myJobs} = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
-  const [myJobs, setMyJobs] = useState([]);
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-  useEffect(() => {
-    const getSavedJobs = async () => {
-      const savedJobs = await AsyncStorage.getItem('@SAVED_JOBS');
-      const parsedJobs = JSON.parse(savedJobs);
-      setMyJobs(parsedJobs);
-    };
-    getSavedJobs();
-  }, []);
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
@@ -73,29 +65,48 @@ export default function MyJobsScreen() {
     text: {
       ...textStyles.regular16_white,
     },
+    emptyContainer: {
+      backgroundColor: colors.darkPink100,
+      height: '50%',
+      width: '80%',
+      padding: 23,
+      borderRadius: radius(20),
+      borderColor: colors.white,
+      borderWidth: getWidth(0.5),
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: getHeight(50),
+    },
+    emptyText: {
+      ...textStyles.bold24_white,
+      fontSize: 22,
+      textAlign: 'center',
+    },
   });
 
   // ** ** ** ** ** RENDER ** ** ** ** **
-  const renderCard = (job, index) => (
-    <View style={styles.jobCard} key={index}>
-      <TouchableOpacity onPress={() => onPressJob(index)}>
-        <Text style={styles.title}>{job.title}</Text>
-        <Text style={styles.text}>{job.company.name}</Text>
-        <Text style={styles.text}>{job.commitment.title}</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const renderCard = (job, index) => {
+    return (
+      <View style={styles.jobCard}>
+        <TouchableOpacity onPress={() => onPressJob(index)}>
+          <Text style={styles.title}>{job.title}</Text>
+          <Text style={styles.text}>{job.company.name}</Text>
+          <Text style={styles.text}>{job.commitment.title}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <NavigationHeader title="My Jobs" onCard={false} />
-        {myJobs.length > 0 && (
+        {myJobs.length > 0 ? (
           <>
             <FlatList
               data={myJobs}
               renderItem={({item, index}) => renderCard(item, index)}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) => index}
               style={styles.scroll}
               showsVerticalScrollIndicator={false}
             />
@@ -109,6 +120,13 @@ export default function MyJobsScreen() {
               favorites={true}
             />
           </>
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
+              You haven't saved any jobs yet! Swipe right on the home screen to
+              see them here.
+            </Text>
+          </View>
         )}
       </ImageBackground>
     </View>

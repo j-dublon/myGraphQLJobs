@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Linking} from 'react-native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -8,7 +8,6 @@ import JobCard from '../../components/cards/JobCard';
 import {format} from 'date-fns';
 import IconSwiperCard from '../../components/cards/IconSwiperCard';
 import BasicModal from '../../components/modals/BasicModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import useData from '../../hooks/data/useData';
 
 const background = require('../../../assets/images/background.png');
@@ -18,37 +17,13 @@ export default function HomeScreen() {
   const {colors, textStyles} = useTheme();
   const {getWidth, radius} = ScaleHook();
   const swiperRef = useRef();
-  const {getJobs, jobs} = useData();
+  const {allJobs, myJobs, setMyJobs} = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
-  const [country, setCountry] = useState();
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-  useEffect(() => {
-    const getCountry = async () => {
-      const result = await AsyncStorage.getItem('@COUNTRY');
-      const formatted = result
-        .toLowerCase()
-        .split(' ')
-        .join('-');
-      setCountry(formatted);
-    };
-    getCountry();
-  }, []);
-
-  useEffect(() => {
-    if (country) {
-      getJobs({
-        variables: {
-          input: {
-            slug: country,
-          },
-        },
-      });
-    }
-  }, []);
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // e.g. syncing data, e.g. register a user, can be called by an action
@@ -75,12 +50,9 @@ export default function HomeScreen() {
 
   const onPressLeft = () => swiperRef.current.swipeLeft();
 
-  const onSwipeRight = async index => {
-    const savedJobs = await AsyncStorage.getItem('@SAVED_JOBS');
-    const existing = savedJobs ? JSON.parse(savedJobs) : [];
-    const updated = [...existing, jobs[index]];
-
-    await AsyncStorage.setItem('@SAVED_JOBS', JSON.stringify(updated));
+  const onSwipeRight = cardIndex => {
+    const selected = allJobs.filter((job, index) => index === cardIndex);
+    setMyJobs([...myJobs, ...selected]);
   };
 
   const onSwipeLeft = () => console.log('Nope');
@@ -143,7 +115,7 @@ export default function HomeScreen() {
           onCard={false}
           profile={true}
         />
-        {jobs.length > 0 && (
+        {allJobs.length > 0 && (
           <>
             <CardStack
               style={styles.cardStack}
@@ -151,7 +123,7 @@ export default function HomeScreen() {
               onSwipedLeft={onSwipeLeft}
               onSwipedRight={onSwipeRight}
               renderNoMoreCards={onEmptyStack}>
-              {jobs.map((job, index) => {
+              {allJobs.map((job, index) => {
                 const formattedDate = format(
                   new Date(job.postedAt),
                   'dd/MM/yyyy',
@@ -177,10 +149,10 @@ export default function HomeScreen() {
             <BasicModal
               visibility={showDetailsModal}
               setVisibility={setShowDetailsModal}
-              title={jobs[currentJobIndex].title}
-              commitment={jobs[currentJobIndex].commitment.title}
-              description={jobs[currentJobIndex].description}
-              applyUrl={jobs[currentJobIndex].applyUrl}
+              title={allJobs[currentJobIndex].title}
+              commitment={allJobs[currentJobIndex].commitment.title}
+              description={allJobs[currentJobIndex].description}
+              applyUrl={allJobs[currentJobIndex].applyUrl}
             />
           </>
         )}

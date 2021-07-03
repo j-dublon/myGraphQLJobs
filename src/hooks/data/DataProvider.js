@@ -10,9 +10,11 @@ export default function DataProvider(props) {
   const [countryData, setCountryData] = useState([]);
   const [countryList, setCountryList] = useState([]);
   const [cityList, setCityList] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState();
+  const [selectedCountry, setSelectedCountry] = useState('Germany');
   const [selectedCity, setSelectedCity] = useState();
-  const [jobs, setJobs] = useState([]);
+  const [myJobs, setMyJobs] = useState([]);
+  const [countrySlug, setCountrySlug] = useState();
+  const [allJobs, setAllJobs] = useState([]);
 
   // get all countries
   const [getCountries] = useLazyQuery(Countries, {
@@ -42,15 +44,42 @@ export default function DataProvider(props) {
     }
   }, [countryData, selectedCountry]);
 
+  // get country slug
+  useEffect(() => {
+    const getCountry = async () => {
+      const result = await AsyncStorage.getItem('@COUNTRY');
+      if (result) {
+        const formatted = result
+          .toLowerCase()
+          .split(' ')
+          .join('-');
+        setCountrySlug(formatted);
+      }
+    };
+    getCountry();
+  }, []);
+
   // get all jobs in selected country
   const [getJobs] = useLazyQuery(Country, {
+    variables: {
+      input: {
+        slug: countrySlug,
+      },
+    },
     fetchPolicy: 'no-cache',
-    onCompleted: res => {
-      // console.log(res, '<--- getJobs query res');
-      setJobs(res.country.jobs);
+    onCompleted: async res => {
+      if (res.country.jobs) {
+        setAllJobs(res.country.jobs);
+      }
     },
     onError: error => console.log(error, '<--- getJobs query error'),
   });
+
+  useEffect(() => {
+    if (countrySlug) {
+      getJobs();
+    }
+  }, [countrySlug]);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
@@ -62,8 +91,11 @@ export default function DataProvider(props) {
       setSelectedCountry,
       selectedCity,
       setSelectedCity,
+      myJobs,
+      setMyJobs,
       getJobs,
-      jobs,
+      allJobs,
+      setAllJobs,
     }),
     [
       getCountries,
@@ -73,8 +105,11 @@ export default function DataProvider(props) {
       setSelectedCountry,
       selectedCity,
       setSelectedCity,
+      myJobs,
+      setMyJobs,
       getJobs,
-      jobs,
+      allJobs,
+      setAllJobs,
     ],
   );
 

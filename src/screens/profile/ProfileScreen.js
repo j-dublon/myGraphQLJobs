@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
   Text,
   ImageBackground,
-  TextInput,
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -15,14 +14,9 @@ import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import AuthCard from '../../components/cards/AuthCard';
 import {Auth} from 'aws-amplify';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const background = require('../../../assets/images/background.png');
-
-const fakeUserData = {
-  name: 'Jodi',
-  email: 'jodi@me.com',
-  homeCity: 'Leeds',
-};
 
 export default function ProfileScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
@@ -31,11 +25,28 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
-  const [nameText, setNameText] = useState(fakeUserData.name);
-  const [emailText, setEmailText] = useState(fakeUserData.email);
-  const [cityText, setCityText] = useState(fakeUserData.homeCity);
+  const [emailText, setEmailText] = useState();
+  const [countryText, setCountryText] = useState();
+  const [cityText, setCityText] = useState();
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+  useEffect(() => {
+    const getUserDetails = async () => {
+      const {attributes} = await Auth.currentAuthenticatedUser();
+      setEmailText(attributes.email);
+
+      const country = await AsyncStorage.getItem('@COUNTRY');
+      if (country) {
+        setCountryText(country);
+      }
+
+      const city = await AsyncStorage.getItem('@CITY');
+      if (city) {
+        setCityText(city);
+      }
+    };
+    getUserDetails();
+  }, []);
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const logout = async () => {
     await Auth.signOut()
@@ -49,13 +60,7 @@ export default function ProfileScreen() {
   };
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
-  const onChangeName = text => setNameText(text);
-
-  const onChangeEmail = text => setEmailText(text);
-
-  const onChangeCity = text => setCityText(text);
-
-  const onChangePassword = () => navigation.navigate('ChangePassword');
+  const onPressChangePassword = () => navigation.navigate('ChangePassword');
 
   const onPressPreferences = () => navigation.navigate('Preferences');
 
@@ -72,14 +77,12 @@ export default function ProfileScreen() {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    input: {
-      height: getHeight(50),
-      width: '80%',
-      borderColor: colors.white,
-      borderWidth: getWidth(1),
-      paddingHorizontal: getWidth(7),
-      ...textStyles.regular16_white,
-      backgroundColor: colors.darkPink,
+    detailsContainer: {
+      width: '100%',
+      paddingHorizontal: getWidth(30),
+    },
+    detailsText: {
+      ...textStyles.bold16_white,
     },
     logoutText: {
       ...textStyles.bold20_limeGreen,
@@ -93,28 +96,23 @@ export default function ProfileScreen() {
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
           <NavigationHeader title="Account" back={true} onCard={true} />
-          <Spacer height={20} />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeName}
-            value={nameText}
+          <Spacer height={40} />
+          <View style={styles.detailsContainer}>
+            <Text style={styles.detailsText} numberOfLines={1}>
+              {emailText}
+            </Text>
+            <Spacer height={20} />
+            <Text style={styles.detailsText}>{countryText}</Text>
+            <Spacer height={20} />
+            <Text style={styles.detailsText}>{cityText}</Text>
+          </View>
+          <Spacer height={100} />
+          <DefaultButton
+            text="Change password"
+            onPress={onPressChangePassword}
           />
           <Spacer height={30} />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeEmail}
-            value={emailText}
-          />
-          <Spacer height={30} />
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeCity}
-            value={cityText}
-          />
-          <Spacer height={60} />
-          <DefaultButton text="Change password" onPress={onChangePassword} />
-          <Spacer height={30} />
-          <DefaultButton text="Preferences" onPress={onPressPreferences} />
+          <DefaultButton text="Change location" onPress={onPressPreferences} />
           <Spacer height={30} />
           <TouchableOpacity onPress={onPressLogout} style={styles.logoutTouch}>
             <Text style={styles.logoutText}>Log out</Text>

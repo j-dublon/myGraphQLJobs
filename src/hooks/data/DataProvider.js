@@ -1,16 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useLazyQuery} from '@apollo/client';
 import Countries from '../../apollo/queries/Countries';
 import Country from '../../apollo/queries/Country';
 import DataContext from './DataContext';
+import {Auth} from 'aws-amplify';
 
 export default function DataProvider(props) {
   // get country and city data
   const [countryData, setCountryData] = useState([]);
   const [countryList, setCountryList] = useState([]);
   const [cityList, setCityList] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState('Germany');
+  const [selectedCountry, setSelectedCountry] = useState();
   const [selectedCity, setSelectedCity] = useState();
   const [myJobs, setMyJobs] = useState([]);
   const [countrySlug, setCountrySlug] = useState();
@@ -47,7 +47,8 @@ export default function DataProvider(props) {
   // get country slug
   useEffect(() => {
     const getCountry = async () => {
-      const result = await AsyncStorage.getItem('@COUNTRY');
+      const {attributes} = await Auth.currentAuthenticatedUser();
+      const result = attributes['custom:country'];
       if (result) {
         const formatted = result
           .toLowerCase()
@@ -96,6 +97,7 @@ export default function DataProvider(props) {
       getJobs,
       allJobs,
       setAllJobs,
+      setCountrySlug,
     }),
     [
       getCountries,
@@ -110,6 +112,7 @@ export default function DataProvider(props) {
       getJobs,
       allJobs,
       setAllJobs,
+      setCountrySlug,
     ],
   );
 

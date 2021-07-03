@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Linking} from 'react-native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -17,17 +17,18 @@ export default function HomeScreen() {
   const {colors, textStyles} = useTheme();
   const {getWidth, radius} = ScaleHook();
   const swiperRef = useRef();
-  const {allJobs, myJobs, setMyJobs} = useData();
+  const {allJobs, myJobs, setMyJobs, getCountries} = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+  useEffect(() => {
+    getCountries();
+  }, []);
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
-  // e.g. syncing data, e.g. register a user, can be called by an action
-
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onPressDetails = index => {
     setCurrentJobIndex(index);

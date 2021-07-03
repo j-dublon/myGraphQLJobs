@@ -1,13 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   View,
   Text,
   ImageBackground,
   TouchableOpacity,
-  Switch,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import NavigationHeader from '../../components/headers/NavigationHeader';
@@ -18,6 +16,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faChevronDown} from '@fortawesome/free-solid-svg-icons';
 import QuickPicker from 'quick-picker';
 import useData from '../../hooks/data/useData';
+import {useNavigation} from '@react-navigation/native';
+import {Auth} from 'aws-amplify';
 
 const background = require('../../../assets/images/background.png');
 
@@ -25,23 +25,19 @@ export default function PreferencesScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth} = ScaleHook();
-  const navigation = useNavigation();
   const {
     countryList,
-    cityList,
     selectedCountry,
     setSelectedCountry,
     selectedCity,
     setSelectedCity,
+    setCountrySlug,
   } = useData();
+  const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
-  const [remoteOnly, setRemoteOnly] = useState(false);
-
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
-  // e.g. syncing data, e.g. register a user, can be called by an action
-
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onPressCountry = () => {
     QuickPicker.open({
@@ -57,18 +53,31 @@ export default function PreferencesScreen() {
 
   const onPressCity = () => {
     QuickPicker.open({
-      items: cityList,
+      items: countryList,
       selectedValue: '',
       onPressDone: value => {
-        setSelectedCity(value);
+        setSelectedCity();
+        setSelectedCountry(value);
         QuickPicker.close();
       },
     });
   };
 
-  const onToggleSwitch = () => setRemoteOnly(!remoteOnly);
+  const onPressView = async () => {
+    let user = await Auth.currentAuthenticatedUser();
+    await Auth.updateUserAttributes(user, {
+      'custom:country': selectedCountry,
+    });
 
-  const onPressView = () => {};
+    const slug = selectedCountry
+      .toLowerCase()
+      .split(' ')
+      .join('-');
+
+    setCountrySlug(slug);
+
+    navigation.navigate('HomeTabs');
+  };
 
   // ** ** ** ** ** STYLES ** ** ** ** **
   const styles = StyleSheet.create({
@@ -125,10 +134,10 @@ export default function PreferencesScreen() {
     <View style={styles.screen}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
-          <NavigationHeader title="Preferences" back={true} onCard={true} />
+          <NavigationHeader title="Location" back={true} onCard={true} />
           <Spacer height={20} />
           <Text style={styles.title}>Show me:</Text>
-          <Spacer height={20} />
+          <Spacer height={30} />
           <View style={styles.box}>
             <TouchableOpacity style={styles.touch} onPress={onPressCountry}>
               <Text style={styles.boxText}>
@@ -154,20 +163,7 @@ export default function PreferencesScreen() {
               />
             </TouchableOpacity>
           </View>
-          <Spacer height={30} />
-          <View style={styles.switchContainer}>
-            <View style={styles.switchTextContainer}>
-              <Text style={styles.switchText}>Remote only?</Text>
-            </View>
-            <Switch
-              trackColor={{false: colors.black, true: colors.limeGreen}}
-              thumbColor={colors.pink}
-              ios_backgroundColor={colors.black}
-              onValueChange={onToggleSwitch}
-              value={remoteOnly}
-            />
-          </View>
-          <Spacer height={60} />
+          <Spacer height={150} />
           <DefaultButton text="View" onPress={onPressView} />
         </AuthCard>
       </ImageBackground>

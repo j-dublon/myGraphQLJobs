@@ -14,14 +14,13 @@ import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import AuthCard from '../../components/cards/AuthCard';
 import {Auth} from 'aws-amplify';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const background = require('../../../assets/images/background.png');
 
 export default function ProfileScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
-  const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth} = ScaleHook();
+  const {textStyles} = useTheme();
+  const {getWidth} = ScaleHook();
   const navigation = useNavigation();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
@@ -33,16 +32,10 @@ export default function ProfileScreen() {
   useEffect(() => {
     const getUserDetails = async () => {
       const {attributes} = await Auth.currentAuthenticatedUser();
-      setEmailText(attributes.email);
-
-      const country = await AsyncStorage.getItem('@COUNTRY');
-      if (country) {
-        setCountryText(country);
-      }
-
-      const city = await AsyncStorage.getItem('@CITY');
-      if (city) {
-        setCityText(city);
+      if (attributes) {
+        setEmailText(attributes.email);
+        setCountryText(attributes['custom:country']);
+        setCityText(attributes['custom:city']);
       }
     };
     getUserDetails();

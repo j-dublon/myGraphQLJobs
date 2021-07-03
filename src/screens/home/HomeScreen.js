@@ -75,9 +75,15 @@ export default function HomeScreen() {
 
   const onPressLeft = () => swiperRef.current.swipeLeft();
 
-  const onSwipeRight = () => console.log('RIGHT');
+  const onSwipeRight = async index => {
+    const savedJobs = await AsyncStorage.getItem('@SAVED_JOBS');
+    const existing = savedJobs ? JSON.parse(savedJobs) : [];
+    const updated = [...existing, jobs[index]];
 
-  const onSwipeLeft = () => console.log('LEFT');
+    await AsyncStorage.setItem('@SAVED_JOBS', JSON.stringify(updated));
+  };
+
+  const onSwipeLeft = () => console.log('Nope');
 
   const onEmptyStack = () => (
     <View style={styles.emptyContainer}>
@@ -168,16 +174,16 @@ export default function HomeScreen() {
               onPressLeft={onPressLeft}
               onPressRight={onPressRight}
             />
+            <BasicModal
+              visibility={showDetailsModal}
+              setVisibility={setShowDetailsModal}
+              title={jobs[currentJobIndex].title}
+              commitment={jobs[currentJobIndex].commitment.title}
+              description={jobs[currentJobIndex].description}
+              applyUrl={jobs[currentJobIndex].applyUrl}
+            />
           </>
         )}
-        <BasicModal
-          visibility={showDetailsModal}
-          setVisibility={setShowDetailsModal}
-          title={jobs[currentJobIndex].title}
-          commitment={jobs[currentJobIndex].commitment.title}
-          description={jobs[currentJobIndex].description}
-          applyUrl={jobs[currentJobIndex].applyUrl}
-        />
       </ImageBackground>
     </View>
   );

@@ -48,7 +48,7 @@ export default function LoginScreen() {
 
     await Auth.signIn(emailText, passwordText)
       .then(res => {
-        console.log(res, '<----sign in res');
+        // console.log(res, '<----sign in res');
         setEmailText('');
         setPasswordText('');
         navigation.navigate('HomeContainer');

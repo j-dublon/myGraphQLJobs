@@ -1,6 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Linking} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import CardStack from 'react-native-card-stack-swiper';
@@ -10,104 +9,45 @@ import {format} from 'date-fns';
 import IconSwiperCard from '../../components/cards/IconSwiperCard';
 import BasicModal from '../../components/modals/BasicModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useData from '../../hooks/data/useData';
 
 const background = require('../../../assets/images/background.png');
-
-const fakeData = [
-  {
-    title: 'Senior Fullstack Developer',
-    commitment: {
-      title: 'Full-time',
-    },
-    cities: [
-      {
-        name: 'San Francisco',
-      },
-    ],
-    remotes: {
-      type: 'remote',
-    },
-    description:
-      'We are looking for a strong (Midlevel to Senior) Javascript Developer with to join our team. You will be working on extending and maintaining frontend code and serverless backend.\n\nFull-time or part-time. In Berlin or remote.\n\n​\n\n**Job Description**\n\n- Proven knowledge in JavaScript related to design, analysis, development and maintenance\n- Understanding the nature of asynchronous programming and its quirks and workarounds\n- Fundamental knowledge about design principles behind a scalable application\n- Good understanding of security and data protection concepts\n- Well rounded knowledge of application architecture\n- Ability to form and communicate architecture decisions\n- Focus on code quality and deliver projects with high business impact\n\n',
-    company: {
-      name: 'Segment',
-      websiteUrl: 'http://segment.com',
-    },
-    applyUrl: 'https://grnh.se/2d8f45d71',
-    postedAt: '2019-08-12T20:19:52.000Z',
-  },
-  {
-    title: 'Junior Frontend Developer',
-    commitment: {
-      title: 'Full-time',
-    },
-    cities: [
-      {
-        name: 'San Francisco',
-      },
-    ],
-    remotes: {
-      type: 'remote',
-    },
-    description:
-      'We are looking for a strong (Midlevel to Senior) Javascript Developer with to join our team. You will be working on extending and maintaining frontend code and serverless backend.\n\nFull-time or part-time. In Berlin or remote.\n\n​\n\n**Job Description**\n\n- Proven knowledge in JavaScript related to design, analysis, development and maintenance\n- Understanding the nature of asynchronous programming and its quirks and workarounds\n- Fundamental knowledge about design principles behind a scalable application\n- Good understanding of security and data protection concepts\n- Well rounded knowledge of application architecture\n- Ability to form and communicate architecture decisions\n- Focus on code quality and deliver projects with high business impact\n\n',
-    company: {
-      name: 'Segment',
-      websiteUrl: 'http://segment.com',
-    },
-    applyUrl: 'https://grnh.se/2d8f45d71',
-    postedAt: '2019-08-12T20:19:52.000Z',
-  },
-  {
-    title: 'Javascript Engineer',
-    commitment: {
-      title: 'Full-time',
-    },
-    cities: [
-      {
-        name: 'San Francisco',
-      },
-    ],
-    remotes: {
-      type: 'remote',
-    },
-    description:
-      'We are looking for a strong (Midlevel to Senior) Javascript Developer with to join our team. You will be working on extending and maintaining frontend code and serverless backend.\n\nFull-time or part-time. In Berlin or remote.\n\n​\n\n**Job Description**\n\n- Proven knowledge in JavaScript related to design, analysis, development and maintenance\n- Understanding the nature of asynchronous programming and its quirks and workarounds\n- Fundamental knowledge about design principles behind a scalable application\n- Good understanding of security and data protection concepts\n- Well rounded knowledge of application architecture\n- Ability to form and communicate architecture decisions\n- Focus on code quality and deliver projects with high business impact\n\n',
-    company: {
-      name: 'Segment',
-      websiteUrl: 'http://segment.com',
-    },
-    applyUrl: 'https://grnh.se/2d8f45d71',
-    postedAt: '2019-08-12T20:19:52.000Z',
-  },
-];
 
 export default function HomeScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const navigation = useNavigation();
+  const {getWidth, radius} = ScaleHook();
   const swiperRef = useRef();
+  const {getJobs, jobs} = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
-  const [selectedCountry, setSelectedCountry] = useState();
-  const [selectedCity, setSelectedCity] = useState();
+  const [country, setCountry] = useState();
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   useEffect(() => {
-    const getCountryAndCity = async () => {
-      const country = await AsyncStorage.getItem('@COUNTRY');
-      const city = await AsyncStorage.getItem('@CITY');
-
-      setSelectedCountry(country);
-      setSelectedCity(city);
-
-      return;
+    const getCountry = async () => {
+      const result = await AsyncStorage.getItem('@COUNTRY');
+      const formatted = result
+        .toLowerCase()
+        .split(' ')
+        .join('-');
+      setCountry(formatted);
     };
+    getCountry();
+  }, []);
 
-    getCountryAndCity();
+  useEffect(() => {
+    if (country) {
+      getJobs({
+        variables: {
+          input: {
+            slug: country,
+          },
+        },
+      });
+    }
   }, []);
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
@@ -120,7 +60,7 @@ export default function HomeScreen() {
   };
 
   const onPressWebsite = async () => {
-    const url = fakeData[currentJobIndex].applyUrl;
+    const url = jobs[currentJobIndex].applyUrl;
 
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
@@ -197,36 +137,46 @@ export default function HomeScreen() {
           onCard={false}
           profile={true}
         />
-        <CardStack
-          style={styles.cardStack}
-          ref={swiperRef}
-          onSwipedLeft={onSwipeLeft}
-          onSwipedRight={onSwipeRight}
-          renderNoMoreCards={onEmptyStack}>
-          {fakeData.map((job, index) => {
-            const formattedDate = format(new Date(job.postedAt), 'dd/MM/yyyy');
-            return (
-              <JobCard
-                title={job.title}
-                company={job.company.name}
-                city={job.cities[0].name}
-                commitment={job.commitment.title}
-                posted={formattedDate}
-                onPressMoreInfo={() => onPressDetails(index)}
-                onPressWebsite={onPressWebsite}
-                key={index}
-              />
-            );
-          })}
-        </CardStack>
-        <IconSwiperCard onPressLeft={onPressLeft} onPressRight={onPressRight} />
+        {jobs.length > 0 && (
+          <>
+            <CardStack
+              style={styles.cardStack}
+              ref={swiperRef}
+              onSwipedLeft={onSwipeLeft}
+              onSwipedRight={onSwipeRight}
+              renderNoMoreCards={onEmptyStack}>
+              {jobs.map((job, index) => {
+                const formattedDate = format(
+                  new Date(job.postedAt),
+                  'dd/MM/yyyy',
+                );
+                return (
+                  <JobCard
+                    title={job.title}
+                    company={job.company.name}
+                    city={job.cities[0].name}
+                    commitment={job.commitment.title}
+                    posted={formattedDate}
+                    onPressMoreInfo={() => onPressDetails(index)}
+                    onPressWebsite={onPressWebsite}
+                    key={index}
+                  />
+                );
+              })}
+            </CardStack>
+            <IconSwiperCard
+              onPressLeft={onPressLeft}
+              onPressRight={onPressRight}
+            />
+          </>
+        )}
         <BasicModal
           visibility={showDetailsModal}
           setVisibility={setShowDetailsModal}
-          title={fakeData[currentJobIndex].title}
-          commitment={fakeData[currentJobIndex].commitment.title}
-          description={fakeData[currentJobIndex].description}
-          applyUrl={fakeData[currentJobIndex].applyUrl}
+          title={jobs[currentJobIndex].title}
+          commitment={jobs[currentJobIndex].commitment.title}
+          description={jobs[currentJobIndex].description}
+          applyUrl={jobs[currentJobIndex].applyUrl}
         />
       </ImageBackground>
     </View>

@@ -9,6 +9,7 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useLazyQuery} from '@apollo/client';
 import Countries from '../../apollo/queries/Countries';
+import Country from '../../apollo/queries/Country';
 import DataContext from './DataContext';
 
 export default function DataProvider(props) {
@@ -18,11 +19,13 @@ export default function DataProvider(props) {
   const [cityList, setCityList] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState();
   const [selectedCity, setSelectedCity] = useState();
+  const [jobs, setJobs] = useState([]);
 
+  // get all countries
   const [getCountries] = useLazyQuery(Countries, {
     fetchPolicy: 'no-cache',
     onCompleted: res => {
-      console.log(res, '<---countries query res');
+      // console.log(res, '<---countries query res');
       setCountryData(res.countries);
       if (res.countries.length > 0) {
         let list = [''];
@@ -33,6 +36,7 @@ export default function DataProvider(props) {
     onError: error => console.log(error, '<---countries query error'),
   });
 
+  // get cities in selected country
   useEffect(() => {
     if (countryData.length > 0 && selectedCountry) {
       let list = [''];
@@ -45,6 +49,16 @@ export default function DataProvider(props) {
     }
   }, [countryData, selectedCountry]);
 
+  // get all jobs in selected country
+  const [getJobs] = useLazyQuery(Country, {
+    fetchPolicy: 'no-cache',
+    onCompleted: res => {
+      // console.log(res, '<--- getJobs query res');
+      setJobs(res.country.jobs);
+    },
+    onError: error => console.log(error, '<--- getJobs query error'),
+  });
+
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
     () => ({
@@ -55,6 +69,8 @@ export default function DataProvider(props) {
       setSelectedCountry,
       selectedCity,
       setSelectedCity,
+      getJobs,
+      jobs,
     }),
     [
       getCountries,
@@ -64,6 +80,8 @@ export default function DataProvider(props) {
       setSelectedCountry,
       selectedCity,
       setSelectedCity,
+      getJobs,
+      jobs,
     ],
   );
 

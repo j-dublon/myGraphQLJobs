@@ -6,7 +6,7 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
-  Alert
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import useTheme from '../../hooks/theme/UseTheme';
@@ -15,8 +15,8 @@ import AuthCard from '../../components/cards/AuthCard';
 import Spacer from '../../components/utility/Spacer';
 import DefaultButton from '../../components/buttons/DefaultButton';
 import NavigationHeader from '../../components/headers/NavigationHeader';
-import { Auth } from 'aws-amplify';
-import { emailRegex, passwordRegex } from '../../utils/regex';
+import {Auth} from 'aws-amplify';
+import {emailRegex, passwordRegex} from '../../utils/regex';
 
 const background = require('../../../assets/images/background.png');
 
@@ -33,45 +33,58 @@ export default function LoginScreen() {
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   // ** ** ** ** ** LOGIC ** ** ** ** **
   const login = async () => {
-
-    if (!emailText || !emailRegex.test(emailText) || !passwordText || !passwordRegex.test(passwordText)) {
-      Alert.alert('', 'Please ensure you enter your email address and password correctly');
+    if (
+      !emailText ||
+      !emailRegex.test(emailText) ||
+      !passwordText ||
+      !passwordRegex.test(passwordText)
+    ) {
+      Alert.alert(
+        '',
+        'Please ensure you enter your email address and password correctly',
+      );
       return;
     }
 
     await Auth.signIn(emailText, passwordText)
       .then(res => {
-        console.log(res, "<----sign in res");
+        console.log(res, '<----sign in res');
         setEmailText('');
         setPasswordText('');
         navigation.navigate('HomeContainer');
-        
       })
       .catch(err => {
-        console.log(err, "<----sign in error");
+        console.log(err, '<----sign in error');
 
         if (err.code === 'UserNotConfirmedException') {
-          Alert.alert('', 'Please follow the link we have sent to your email address', [{ text: 'Ok' }, { text: 'Resend', onPress: requestNewLink}]);
+          Alert.alert(
+            '',
+            'Please follow the link we have sent to your email address',
+            [{text: 'Ok'}, {text: 'Resend', onPress: requestNewLink}],
+          );
         }
 
         if (err.code === 'UserNotFoundException') {
-          Alert.alert('', 'No account found for that email address, please register to continue')
+          Alert.alert(
+            '',
+            'No account found for that email address, please register to continue',
+          );
         }
 
-        if (err.code === "NotAuthorizedException") {
-          Alert.alert('', 'Incorrect password')
+        if (err.code === 'NotAuthorizedException') {
+          Alert.alert('', 'Incorrect password');
         }
 
         setEmailText('');
         setPasswordText('');
-      })
+      });
   };
 
   const requestNewLink = async () => {
     await Auth.resendSignUp(emailText)
-      .then(res => console.log(res, "<---resend res"))
-      .catch(err => "<----resend err")
-  }
+      .then(res => console.log(res, '<---resend res'))
+      .catch(err => '<----resend err');
+  };
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onChangeEmail = text => setEmailText(text);
@@ -125,7 +138,7 @@ export default function LoginScreen() {
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
           <NavigationHeader
-            title="MY GraphQL jobs"
+            title="My GraphQL jobs"
             back={false}
             onCard={true}
           />

@@ -21,6 +21,7 @@ import TopTabs from '../../components/buttons/TopTabs';
 import Pie from 'react-native-pie';
 import Spacer from '../../components/utility/Spacer';
 import {BarChart} from 'react-native-chart-kit';
+import useData from '../../hooks/data/useData';
 
 const background = require('../../../assets/images/background.png');
 
@@ -28,11 +29,12 @@ export default function TrendsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth, fontSize, radius} = ScaleHook();
+  const {selectedCountry, selectedCity} = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [selected, setSelected] = useState('left');
-  const leftText = 'The best cities for GraphQL jobs in (your country)';
-  const rightText = 'On site vs. remote in (your city)';
+  const leftText = `The best cities for GraphQL jobs in ${selectedCountry}`;
+  const rightText = `On site vs. remote in ${selectedCity}`;
   const location = selected === 'left' ? 'country' : 'city';
 
   const pieData = [

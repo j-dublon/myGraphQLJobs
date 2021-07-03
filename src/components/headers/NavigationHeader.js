@@ -45,14 +45,17 @@ export default function NavigationHeader({
     },
   };
 
+  // ** ** ** ** ** ACTIONS ** ** ** ** **
+  const onPressBack = () => {
+    navigation.goBack();
+  };
+
   // ** ** ** ** ** RENDER ** ** ** ** **
   return (
     <View style={styles.container}>
       {back && (
         <View style={styles.iconContainer}>
-          <TouchableOpacity
-            style={styles.touch}
-            onPress={() => navigation.goBack()}>
+          <TouchableOpacity style={styles.touch} onPress={onPressBack}>
             <FontAwesomeIcon icon={faBackward} style={styles.icon} size={28} />
           </TouchableOpacity>
         </View>

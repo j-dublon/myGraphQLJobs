@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useLazyQuery} from '@apollo/client';
 import Countries from '../../apollo/queries/Countries';
 import Country from '../../apollo/queries/Country';
+import City from '../../apollo/queries/City';
 import DataContext from './DataContext';
 import {Auth} from 'aws-amplify';
 
@@ -14,7 +15,10 @@ export default function DataProvider(props) {
   const [selectedCity, setSelectedCity] = useState();
   const [myJobs, setMyJobs] = useState([]);
   const [countrySlug, setCountrySlug] = useState();
+  const [citySlug, setCitySlug] = useState();
   const [allJobs, setAllJobs] = useState([]);
+  const [totalJobsInCity, setTotalJobsInCity] = useState();
+  const [remoteJobsInCity, setRemoteJobsInCity] = useState();
 
   // get all countries
   const [getCountries] = useLazyQuery(Countries, {
@@ -44,20 +48,28 @@ export default function DataProvider(props) {
     }
   }, [countryData, selectedCountry]);
 
-  // get country slug
+  // get country and city slugs
   useEffect(() => {
-    const getCountry = async () => {
+    const getCountryAndCity = async () => {
       const {attributes} = await Auth.currentAuthenticatedUser();
-      const result = attributes['custom:country'];
-      if (result) {
-        const formatted = result
+      const country = attributes['custom:country'];
+      if (country) {
+        const formattedCountry = country
           .toLowerCase()
           .split(' ')
           .join('-');
-        setCountrySlug(formatted);
+        setCountrySlug(formattedCountry);
+      }
+      const city = attributes['custom:city'];
+      if (city) {
+        const formattedCity = city
+          .toLowerCase()
+          .split(' ')
+          .join('-');
+        setCitySlug(formattedCity);
       }
     };
-    getCountry();
+    getCountryAndCity();
   }, []);
 
   // get all jobs in selected country
@@ -82,6 +94,35 @@ export default function DataProvider(props) {
     }
   }, [countrySlug]);
 
+  // get remote vs on site jobs by city
+  const [getRemotesByCity] = useLazyQuery(City, {
+    variables: {
+      input: {
+        slug: citySlug,
+      },
+    },
+    fetchPolicy: 'no-cache',
+    onCompleted: async res => {
+      console.log(res.city.jobs, '<---get remotes by city res');
+      if (res.city.jobs) {
+        // const totalJobs = res.city.jobs.length;
+        let totalRemotes = 0;
+        res.city.jobs.forEach(job => {
+          if (job.remotes.length > 0) totalRemotes++;
+        });
+        setRemoteJobsInCity(totalRemotes);
+        setTotalJobsInCity(res.city.jobs.length);
+      }
+    },
+    onError: error => console.log(error, '<--- getJobs query error'),
+  });
+
+  useEffect(() => {
+    if (citySlug) {
+      getRemotesByCity();
+    }
+  }, [citySlug]);
+
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
     () => ({
@@ -98,6 +139,9 @@ export default function DataProvider(props) {
       allJobs,
       setAllJobs,
       setCountrySlug,
+      getRemotesByCity,
+      totalJobsInCity,
+      remoteJobsInCity,
     }),
     [
       getCountries,
@@ -113,6 +157,9 @@ export default function DataProvider(props) {
       allJobs,
       setAllJobs,
       setCountrySlug,
+      getRemotesByCity,
+      totalJobsInCity,
+      remoteJobsInCity,
     ],
   );
 

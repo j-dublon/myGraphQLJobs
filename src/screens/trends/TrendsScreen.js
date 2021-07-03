@@ -14,28 +14,30 @@ import Pie from 'react-native-pie';
 import Spacer from '../../components/utility/Spacer';
 import {BarChart} from 'react-native-chart-kit';
 import useData from '../../hooks/data/useData';
+import {Auth} from 'aws-amplify';
 
 const background = require('../../../assets/images/background.png');
 
 export default function TrendsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
-  const {getHeight, getWidth, fontSize, radius} = ScaleHook();
-  const {selectedCountry, selectedCity} = useData();
+  const {getHeight, getWidth, radius} = ScaleHook();
+  const {getRemotesByCity, totalJobsInCity, remoteJobsInCity} = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [selected, setSelected] = useState('left');
-  const leftText = `The best cities for GraphQL jobs in ${selectedCountry}`;
-  const rightText = `On site vs. remote in ${selectedCity}`;
+  const [leftText, setLeftText] = useState('');
+  const [rightText, setRightText] = useState('');
   const location = selected === 'left' ? 'country' : 'city';
+  const [percentageRemote, setPercentageRemote] = useState();
 
   const pieData = [
     {
-      percentage: 30,
+      percentage: percentageRemote,
       color: colors.midPink,
     },
     {
-      percentage: 70,
+      percentage: 100 - percentageRemote,
       color: colors.limeGreen,
     },
   ];
@@ -65,6 +67,27 @@ export default function TrendsScreen() {
   };
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+  useEffect(() => {
+    const getAttributes = async () => {
+      const {attributes} = await Auth.currentAuthenticatedUser();
+      setLeftText(
+        `The best cities for GraphQL jobs in ${attributes['custom:country']}`,
+      );
+      setRightText(`On site vs. remote in ${attributes['custom:city']}`);
+    };
+    getAttributes();
+  }, []);
+
+  useEffect(() => {
+    getRemotesByCity();
+  }, []);
+
+  useEffect(() => {
+    if (totalJobsInCity && remoteJobsInCity) {
+      setPercentageRemote((remoteJobsInCity / totalJobsInCity) * 100);
+    }
+  }, []);
+
   // ** ** ** ** ** LOGIC ** ** ** ** **
 
   // ** ** ** ** ** ACTIONS ** ** ** ** **

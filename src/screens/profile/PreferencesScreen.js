@@ -35,8 +35,6 @@ export default function PreferencesScreen() {
     setSelectedCity,
     setCountrySlug,
     setCitySlug,
-    getRemotesByCity,
-    getJobs,
   } = useData();
   const navigation = useNavigation();
 
@@ -73,41 +71,27 @@ export default function PreferencesScreen() {
       return;
     }
 
+    // update country and city in cognito
     let user = await Auth.currentAuthenticatedUser();
     await Auth.updateUserAttributes(user, {
       'custom:country': selectedCountry,
       'custom:city': selectedCity,
     });
 
+    // store country and city slugs
     const slug = selectedCountry
       .toLowerCase()
       .split(' ')
       .join('-');
-
     setCountrySlug(slug);
 
     const city = selectedCity
       .toLowerCase()
       .split(' ')
       .join('-');
-
     setCitySlug(city);
 
-    getJobs({
-      variables: {
-        input: {
-          slug: slug,
-        },
-      },
-    });
-
-    getRemotesByCity({
-      variables: {
-        input: {
-          slug: city,
-        },
-      },
-    });
+    // navigate
     navigation.navigate('HomeTabs');
   };
 

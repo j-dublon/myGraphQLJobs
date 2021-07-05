@@ -9,6 +9,7 @@ import {format} from 'date-fns';
 import IconSwiperCard from '../../components/cards/IconSwiperCard';
 import BasicModal from '../../components/modals/BasicModal';
 import useData from '../../hooks/data/useData';
+import {useFocusEffect} from '@react-navigation/native';
 
 const background = require('../../../assets/images/background.png');
 
@@ -17,7 +18,14 @@ export default function HomeScreen() {
   const {colors, textStyles} = useTheme();
   const {getWidth, radius} = ScaleHook();
   const swiperRef = useRef();
-  const {allJobs, myJobs, setMyJobs, getCountries} = useData();
+  const {
+    allJobs,
+    myJobs,
+    setMyJobs,
+    getCountries,
+    countrySlug,
+    getJobs,
+  } = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -27,6 +35,17 @@ export default function HomeScreen() {
   useEffect(() => {
     getCountries();
   }, []);
+
+  // re-call getJobs on return to home tab after changing location
+  useFocusEffect(() => {
+    getJobs({
+      variables: {
+        input: {
+          slug: countrySlug,
+        },
+      },
+    });
+  });
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // ** ** ** ** ** ACTIONS ** ** ** ** **

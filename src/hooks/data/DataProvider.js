@@ -45,7 +45,7 @@ export default function DataProvider(props) {
     }
   }, [countryData, selectedCountry]);
 
-  // get country and city slugs
+  // get country and city slugs when app first loads
   const [countrySlug, setCountrySlug] = useState();
   const [citySlug, setCitySlug] = useState();
 
@@ -72,6 +72,7 @@ export default function DataProvider(props) {
     getCountryAndCity();
   }, []);
 
+  // get remote job data for user's city when app first loads
   useEffect(() => {
     if (citySlug) {
       getRemotesByCity({
@@ -84,7 +85,7 @@ export default function DataProvider(props) {
     }
   }, [citySlug]);
 
-  // get all jobs in selected country
+  // get all jobs in selected country when app first loads
   const [allJobs, setAllJobs] = useState([]);
 
   const [getJobs] = useLazyQuery(Country, {
@@ -97,6 +98,7 @@ export default function DataProvider(props) {
     onError: error => console.log(error, '<--- getJobs query error'),
   });
 
+  // get all jobs in selected country
   useEffect(() => {
     if (countrySlug) {
       getJobs({
@@ -106,7 +108,7 @@ export default function DataProvider(props) {
           },
         },
       });
-      getTopCitiesByCountry();
+      // getTopCitiesByCountry();
     }
   }, [countrySlug]);
 

@@ -18,7 +18,12 @@ export default function TrendsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth, radius} = ScaleHook();
-  const {getRemotesByCity, totalJobsInCity, remoteJobsInCity} = useData();
+  const {
+    getRemotesByCity,
+    totalJobsInCity,
+    remoteJobsInCity,
+    citySlug,
+  } = useData();
   const isFocused = useIsFocused();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
@@ -63,6 +68,7 @@ export default function TrendsScreen() {
   };
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+  // get country and city from cognito when tab is focused, get remote data for user's city
   useFocusEffect(() => {
     const getAttributes = async () => {
       const {attributes} = await Auth.currentAuthenticatedUser();
@@ -71,8 +77,17 @@ export default function TrendsScreen() {
     };
 
     getAttributes();
+
+    getRemotesByCity({
+      variables: {
+        input: {
+          slug: citySlug,
+        },
+      },
+    });
   });
 
+  // set percentage of remote / on-site jobs for user's city
   useFocusEffect(() => {
     if (totalJobsInCity && remoteJobsInCity) {
       setPercentageRemote((remoteJobsInCity / totalJobsInCity) * 100);

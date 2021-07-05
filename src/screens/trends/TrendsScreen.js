@@ -1,11 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
 import AuthCard from '../../components/cards/AuthCard';
@@ -15,6 +9,8 @@ import Spacer from '../../components/utility/Spacer';
 import {BarChart} from 'react-native-chart-kit';
 import useData from '../../hooks/data/useData';
 import {Auth} from 'aws-amplify';
+import {useIsFocused} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 const background = require('../../../assets/images/background.png');
 
@@ -23,12 +19,12 @@ export default function TrendsScreen() {
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth, radius} = ScaleHook();
   const {getRemotesByCity, totalJobsInCity, remoteJobsInCity} = useData();
+  const isFocused = useIsFocused();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [selected, setSelected] = useState('left');
-  const [leftText, setLeftText] = useState('');
-  const [rightText, setRightText] = useState('');
-  const location = selected === 'left' ? 'country' : 'city';
+  const [country, setCountry] = useState();
+  const [city, setCity] = useState();
   const [percentageRemote, setPercentageRemote] = useState();
 
   const pieData = [
@@ -67,26 +63,21 @@ export default function TrendsScreen() {
   };
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-  useEffect(() => {
+  useFocusEffect(() => {
     const getAttributes = async () => {
       const {attributes} = await Auth.currentAuthenticatedUser();
-      setLeftText(
-        `The best cities for GraphQL jobs in ${attributes['custom:country']}`,
-      );
-      setRightText(`On site vs. remote in ${attributes['custom:city']}`);
+      setCountry(attributes['custom:country']);
+      setCity(attributes['custom:city']);
     };
+
     getAttributes();
-  }, []);
+  });
 
-  useEffect(() => {
-    getRemotesByCity();
-  }, []);
-
-  useEffect(() => {
+  useFocusEffect(() => {
     if (totalJobsInCity && remoteJobsInCity) {
       setPercentageRemote((remoteJobsInCity / totalJobsInCity) * 100);
     }
-  }, []);
+  });
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
 
@@ -123,27 +114,22 @@ export default function TrendsScreen() {
       borderRadius: radius(10),
     },
     textContainer: {
-      marginTop: getHeight(40),
+      marginTop: getHeight(70),
       alignItems: 'center',
-      justifyContent: 'space-between',
       width: '80%',
       height: getHeight(100),
     },
     text: {
       ...textStyles.regular16_white,
       textAlign: 'center',
-    },
-    link: {
-      ...textStyles.regular16_limeGreen,
-      textDecorationLine: 'underline',
-      textAlign: 'center',
+      marginTop: getHeight(10),
     },
   });
 
   // ** ** ** ** ** RENDER ** ** ** ** **
 
   return (
-    <View style={styles.screen}>
+    <View style={styles.screen} isFocused={isFocused}>
       <ImageBackground source={background} style={styles.image}>
         <AuthCard>
           <TopTabs
@@ -176,11 +162,13 @@ export default function TrendsScreen() {
           )}
           <View style={styles.textContainer}>
             <Text style={styles.text}>
-              {selected === 'left' ? leftText : rightText}
+              {selected === 'left'
+                ? 'The best cities for GraphQL jobs in:'
+                : 'On site vs. remote in:'}
             </Text>
-            <TouchableOpacity>
-              <Text style={styles.link}>{`Change ${location}`}</Text>
-            </TouchableOpacity>
+            <Text style={styles.text}>
+              {selected === 'left' ? country : city}
+            </Text>
           </View>
         </AuthCard>
       </ImageBackground>

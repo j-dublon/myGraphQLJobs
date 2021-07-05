@@ -56,7 +56,7 @@ export default function HomeScreen() {
     setMyJobs([...myJobs, ...selected]);
   };
 
-  const onSwipeLeft = () => console.log('Nope');
+  const onSwipeLeft = () => console.log('Nope!');
 
   const onEmptyStack = () => (
     <View style={styles.emptyContainer}>

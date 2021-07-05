@@ -7,20 +7,15 @@ import DataContext from './DataContext';
 import {Auth} from 'aws-amplify';
 
 export default function DataProvider(props) {
-  // get country and city data
-  const [countryData, setCountryData] = useState([]);
-  const [countryList, setCountryList] = useState([]);
-  const [cityList, setCityList] = useState([]);
+  // store values generated elsewhere in the app
   const [selectedCountry, setSelectedCountry] = useState();
   const [selectedCity, setSelectedCity] = useState();
   const [myJobs, setMyJobs] = useState([]);
-  const [countrySlug, setCountrySlug] = useState();
-  const [citySlug, setCitySlug] = useState();
-  const [allJobs, setAllJobs] = useState([]);
-  const [totalJobsInCity, setTotalJobsInCity] = useState();
-  const [remoteJobsInCity, setRemoteJobsInCity] = useState();
 
-  // get all countries
+  // get all countries for country list
+  const [countryData, setCountryData] = useState([]);
+  const [countryList, setCountryList] = useState([]);
+
   const [getCountries] = useLazyQuery(Countries, {
     fetchPolicy: 'no-cache',
     onCompleted: res => {
@@ -35,7 +30,9 @@ export default function DataProvider(props) {
     onError: error => console.log(error, '<---countries query error'),
   });
 
-  // get cities in selected country
+  // get cities in selected country for cities list
+  const [cityList, setCityList] = useState([]);
+
   useEffect(() => {
     if (countryData.length > 0 && selectedCountry) {
       let list = [''];
@@ -49,6 +46,9 @@ export default function DataProvider(props) {
   }, [countryData, selectedCountry]);
 
   // get country and city slugs
+  const [countrySlug, setCountrySlug] = useState();
+  const [citySlug, setCitySlug] = useState();
+
   useEffect(() => {
     const getCountryAndCity = async () => {
       const {attributes} = await Auth.currentAuthenticatedUser();
@@ -72,13 +72,22 @@ export default function DataProvider(props) {
     getCountryAndCity();
   }, []);
 
+  useEffect(() => {
+    if (citySlug) {
+      getRemotesByCity({
+        variables: {
+          input: {
+            slug: citySlug,
+          },
+        },
+      });
+    }
+  }, [citySlug]);
+
   // get all jobs in selected country
+  const [allJobs, setAllJobs] = useState([]);
+
   const [getJobs] = useLazyQuery(Country, {
-    variables: {
-      input: {
-        slug: countrySlug,
-      },
-    },
     fetchPolicy: 'no-cache',
     onCompleted: async res => {
       if (res.country.jobs) {
@@ -90,20 +99,25 @@ export default function DataProvider(props) {
 
   useEffect(() => {
     if (countrySlug) {
-      getJobs();
+      getJobs({
+        variables: {
+          input: {
+            slug: countrySlug,
+          },
+        },
+      });
+      getTopCitiesByCountry();
     }
   }, [countrySlug]);
 
-  // get remote vs on site jobs by city
+  // get remote vs on site jobs by city for pie chart
+  const [remoteJobsInCity, setRemoteJobsInCity] = useState();
+  const [totalJobsInCity, setTotalJobsInCity] = useState();
+
   const [getRemotesByCity] = useLazyQuery(City, {
-    variables: {
-      input: {
-        slug: citySlug,
-      },
-    },
     fetchPolicy: 'no-cache',
     onCompleted: async res => {
-      console.log(res.city.jobs, '<---get remotes by city res');
+      // console.log(res.city.jobs, '<---get remotes by city res');
       if (res.city.jobs) {
         // const totalJobs = res.city.jobs.length;
         let totalRemotes = 0;
@@ -117,11 +131,15 @@ export default function DataProvider(props) {
     onError: error => console.log(error, '<--- getJobs query error'),
   });
 
-  useEffect(() => {
-    if (citySlug) {
-      getRemotesByCity();
-    }
-  }, [citySlug]);
+  // get top 3 cities for jobs by country for graph
+  const [getTopCitiesByCountry] = useLazyQuery(Countries, {
+    fetchPolicy: 'no-cache',
+    onCompleted: res => {
+      // console.log(res, '<---get top cities by country query res');
+    },
+    onError: error =>
+      console.log(error, '<---get top cities by country query error'),
+  });
 
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
@@ -139,6 +157,7 @@ export default function DataProvider(props) {
       allJobs,
       setAllJobs,
       setCountrySlug,
+      setCitySlug,
       getRemotesByCity,
       totalJobsInCity,
       remoteJobsInCity,
@@ -157,6 +176,7 @@ export default function DataProvider(props) {
       allJobs,
       setAllJobs,
       setCountrySlug,
+      setCitySlug,
       getRemotesByCity,
       totalJobsInCity,
       remoteJobsInCity,

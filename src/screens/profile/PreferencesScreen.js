@@ -5,6 +5,7 @@ import {
   Text,
   ImageBackground,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -27,11 +28,15 @@ export default function PreferencesScreen() {
   const {getHeight, getWidth} = ScaleHook();
   const {
     countryList,
+    cityList,
     selectedCountry,
     setSelectedCountry,
     selectedCity,
     setSelectedCity,
     setCountrySlug,
+    setCitySlug,
+    getRemotesByCity,
+    getJobs,
   } = useData();
   const navigation = useNavigation();
 
@@ -53,20 +58,25 @@ export default function PreferencesScreen() {
 
   const onPressCity = () => {
     QuickPicker.open({
-      items: countryList,
+      items: cityList,
       selectedValue: '',
       onPressDone: value => {
-        setSelectedCity();
-        setSelectedCountry(value);
+        setSelectedCity(value);
         QuickPicker.close();
       },
     });
   };
 
   const onPressView = async () => {
+    if (!selectedCity || !selectedCountry) {
+      Alert.alert('', 'Please select a country and city');
+      return;
+    }
+
     let user = await Auth.currentAuthenticatedUser();
     await Auth.updateUserAttributes(user, {
       'custom:country': selectedCountry,
+      'custom:city': selectedCity,
     });
 
     const slug = selectedCountry
@@ -76,6 +86,28 @@ export default function PreferencesScreen() {
 
     setCountrySlug(slug);
 
+    const city = selectedCity
+      .toLowerCase()
+      .split(' ')
+      .join('-');
+
+    setCitySlug(city);
+
+    getJobs({
+      variables: {
+        input: {
+          slug: slug,
+        },
+      },
+    });
+
+    getRemotesByCity({
+      variables: {
+        input: {
+          slug: city,
+        },
+      },
+    });
     navigation.navigate('HomeTabs');
   };
 

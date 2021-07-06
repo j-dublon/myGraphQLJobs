@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {StyleSheet, View, Text, ImageBackground, Linking} from 'react-native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -10,6 +10,7 @@ import IconSwiperCard from '../../components/cards/IconSwiperCard';
 import BasicModal from '../../components/modals/BasicModal';
 import useData from '../../hooks/data/useData';
 import {useFocusEffect} from '@react-navigation/native';
+import {Auth} from 'aws-amplify';
 
 const background = require('../../../assets/images/background.png');
 
@@ -18,14 +19,7 @@ export default function HomeScreen() {
   const {colors, textStyles} = useTheme();
   const {getWidth, radius} = ScaleHook();
   const swiperRef = useRef();
-  const {
-    allJobs,
-    myJobs,
-    setMyJobs,
-    getCountries,
-    countrySlug,
-    getJobs,
-  } = useData();
+  const {allJobs, myJobs, setMyJobs, getCountries, getJobs} = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -36,16 +30,30 @@ export default function HomeScreen() {
     getCountries();
   }, []);
 
-  // re-call getJobs on return to home tab after changing location
-  useFocusEffect(() => {
-    getJobs({
-      variables: {
-        input: {
-          slug: countrySlug,
-        },
-      },
-    });
-  });
+  // get all jobs on first app load, and when home tab focused (countrySlug not available from login)
+  useFocusEffect(
+    useCallback(() => {
+      const getJobsFromCountry = async () => {
+        const {attributes} = await Auth.currentAuthenticatedUser();
+        const country = attributes['custom:country'];
+        const slug = country
+          .toLowerCase()
+          .split(' ')
+          .join('-');
+
+        console.log(`getting jobs from ${slug}`);
+
+        getJobs({
+          variables: {
+            input: {
+              slug: slug,
+            },
+          },
+        });
+      };
+      getJobsFromCountry();
+    }, []),
+  );
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
   // ** ** ** ** ** ACTIONS ** ** ** ** **

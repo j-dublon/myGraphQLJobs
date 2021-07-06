@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {StyleSheet, View, Text, ImageBackground} from 'react-native';
 import useTheme from '../../hooks/theme/UseTheme';
 import {ScaleHook} from 'react-native-design-to-component';
@@ -18,19 +18,13 @@ export default function TrendsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth, radius} = ScaleHook();
-  const {
-    getRemotesByCity,
-    totalJobsInCity,
-    remoteJobsInCity,
-    citySlug,
-  } = useData();
+  const {percentageOnSite, percentageRemote} = useData();
   const isFocused = useIsFocused();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [selected, setSelected] = useState('left');
   const [country, setCountry] = useState();
   const [city, setCity] = useState();
-  const [percentageRemote, setPercentageRemote] = useState();
 
   const pieData = [
     {
@@ -38,7 +32,7 @@ export default function TrendsScreen() {
       color: colors.midPink,
     },
     {
-      percentage: 100 - percentageRemote,
+      percentage: percentageOnSite,
       color: colors.limeGreen,
     },
   ];
@@ -68,31 +62,18 @@ export default function TrendsScreen() {
   };
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
-  // get country and city from cognito when tab is focused, get remote data for user's city
-  useFocusEffect(() => {
-    const getAttributes = async () => {
-      const {attributes} = await Auth.currentAuthenticatedUser();
-      setCountry(attributes['custom:country']);
-      setCity(attributes['custom:city']);
-    };
+  // get country and city from cognito when tab is focused
+  useFocusEffect(
+    useCallback(() => {
+      const getAttributes = async () => {
+        const {attributes} = await Auth.currentAuthenticatedUser();
+        setCountry(attributes['custom:country']);
+        setCity(attributes['custom:city']);
+      };
 
-    getAttributes();
-
-    getRemotesByCity({
-      variables: {
-        input: {
-          slug: citySlug,
-        },
-      },
-    });
-  });
-
-  // set percentage of remote / on-site jobs for user's city
-  useFocusEffect(() => {
-    if (totalJobsInCity && remoteJobsInCity) {
-      setPercentageRemote((remoteJobsInCity / totalJobsInCity) * 100);
-    }
-  });
+      getAttributes();
+    }, []),
+  );
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
 

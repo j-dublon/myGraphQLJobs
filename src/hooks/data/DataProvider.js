@@ -72,25 +72,13 @@ export default function DataProvider(props) {
     getCountryAndCity();
   }, []);
 
-  // get remote job data for user's city when app first loads
-  useEffect(() => {
-    if (citySlug) {
-      getRemotesByCity({
-        variables: {
-          input: {
-            slug: citySlug,
-          },
-        },
-      });
-    }
-  }, [citySlug]);
-
   // get all jobs in selected country when app first loads
   const [allJobs, setAllJobs] = useState([]);
 
   const [getJobs] = useLazyQuery(Country, {
     fetchPolicy: 'no-cache',
     onCompleted: async res => {
+      console.log(res, '<---getJobs query res');
       if (res.country.jobs) {
         setAllJobs(res.country.jobs);
       }
@@ -115,6 +103,8 @@ export default function DataProvider(props) {
   // get remote vs on site jobs by city for pie chart
   const [remoteJobsInCity, setRemoteJobsInCity] = useState();
   const [totalJobsInCity, setTotalJobsInCity] = useState();
+  const [percentageRemote, setPercentageRemote] = useState();
+  const [percentageOnSite, setPercentageOnSite] = useState();
 
   const [getRemotesByCity] = useLazyQuery(City, {
     fetchPolicy: 'no-cache',
@@ -132,6 +122,30 @@ export default function DataProvider(props) {
     },
     onError: error => console.log(error, '<--- getJobs query error'),
   });
+
+  // calculate percentages when remotes by city are fetched
+  useEffect(() => {
+    if ((remoteJobsInCity, totalJobsInCity)) {
+      const remotes = (remoteJobsInCity / totalJobsInCity) * 100;
+      setPercentageRemote(remotes);
+
+      const onSites = 100 - remotes;
+      setPercentageOnSite(onSites);
+    }
+  }, [remoteJobsInCity, totalJobsInCity]);
+
+  // get remote job data for user's city when app first loads and when location changed
+  useEffect(() => {
+    if (citySlug) {
+      getRemotesByCity({
+        variables: {
+          input: {
+            slug: citySlug,
+          },
+        },
+      });
+    }
+  }, [citySlug]);
 
   // get top 3 cities for jobs by country for graph
   const [getTopCitiesByCountry] = useLazyQuery(Countries, {
@@ -163,6 +177,8 @@ export default function DataProvider(props) {
       getRemotesByCity,
       totalJobsInCity,
       remoteJobsInCity,
+      percentageRemote,
+      percentageOnSite,
     }),
     [
       getCountries,
@@ -182,6 +198,8 @@ export default function DataProvider(props) {
       getRemotesByCity,
       totalJobsInCity,
       remoteJobsInCity,
+      percentageRemote,
+      percentageOnSite,
     ],
   );
 

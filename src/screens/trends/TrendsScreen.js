@@ -18,13 +18,14 @@ export default function TrendsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth, radius} = ScaleHook();
-  const {percentageOnSite, percentageRemote} = useData();
+  const {percentageOnSite, percentageRemote, topCities} = useData();
   const isFocused = useIsFocused();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [selected, setSelected] = useState('left');
   const [country, setCountry] = useState();
   const [city, setCity] = useState();
+  const [barData, setBarData] = useState();
 
   const pieData = [
     {
@@ -36,15 +37,6 @@ export default function TrendsScreen() {
       color: colors.limeGreen,
     },
   ];
-
-  const barData = {
-    labels: ['San Francisco', 'Detroit', 'New York', 'Los Angeles'],
-    datasets: [
-      {
-        data: [20, 45, 28, 80],
-      },
-    ],
-  };
 
   const chartConfig = {
     color: (opacity = 1) => `rgba(0, 200, 0, ${opacity})`,
@@ -73,6 +65,27 @@ export default function TrendsScreen() {
 
       getAttributes();
     }, []),
+  );
+
+  // set barData when tab is focused
+  useFocusEffect(
+    useCallback(() => {
+      let cityLabels = [];
+      let cityNumbers = [];
+      topCities.forEach(city => {
+        cityLabels.push(city.name);
+        cityNumbers.push(city.jobs);
+      });
+
+      setBarData({
+        labels: cityLabels,
+        datasets: [
+          {
+            data: cityNumbers,
+          },
+        ],
+      });
+    }, [topCities]),
   );
 
   // ** ** ** ** ** LOGIC ** ** ** ** **
@@ -135,7 +148,7 @@ export default function TrendsScreen() {
             setSelected={setSelected}
           />
           <Spacer height={70} />
-          {selected === 'right' ? (
+          {barData && selected === 'right' ? (
             <>
               <Pie radius={100} sections={pieData} strokeCap={'butt'} />
               <View style={styles.remoteContainer}>
@@ -146,15 +159,17 @@ export default function TrendsScreen() {
               </View>
             </>
           ) : (
-            <BarChart
-              style={styles.graphStyle}
-              data={barData}
-              width={280}
-              height={200}
-              chartConfig={chartConfig}
-              verticalLabelRotation={20}
-              fromZero={true}
-            />
+            barData && (
+              <BarChart
+                style={styles.graphStyle}
+                data={barData}
+                width={280}
+                height={200}
+                chartConfig={chartConfig}
+                verticalLabelRotation={20}
+                fromZero={true}
+              />
+            )
           )}
           <View style={styles.textContainer}>
             <Text style={styles.text}>

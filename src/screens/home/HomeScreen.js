@@ -41,8 +41,6 @@ export default function HomeScreen() {
           .split(' ')
           .join('-');
 
-        console.log(`getting jobs from ${slug}`);
-
         getJobs({
           variables: {
             input: {

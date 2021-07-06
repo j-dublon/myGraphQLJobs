@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useLazyQuery} from '@apollo/client';
 import Countries from '../../apollo/queries/Countries';
+import TopCities from '../../apollo/queries/TopCities';
 import Country from '../../apollo/queries/Country';
 import City from '../../apollo/queries/City';
 import DataContext from './DataContext';
@@ -78,7 +79,7 @@ export default function DataProvider(props) {
   const [getJobs] = useLazyQuery(Country, {
     fetchPolicy: 'no-cache',
     onCompleted: async res => {
-      console.log(res, '<---getJobs query res');
+      // console.log(res, '<---getJobs query res');
       if (res.country.jobs) {
         setAllJobs(res.country.jobs);
       }
@@ -148,14 +149,45 @@ export default function DataProvider(props) {
   }, [citySlug]);
 
   // get top 3 cities for jobs by country for graph
-  const [getTopCitiesByCountry] = useLazyQuery(Countries, {
+  const [topCities, setTopCities] = useState([]);
+
+  const [getTopCitiesByCountry] = useLazyQuery(TopCities, {
     fetchPolicy: 'no-cache',
     onCompleted: res => {
       // console.log(res, '<---get top cities by country query res');
+      if (res.country) {
+        const cities = res.country.cities;
+        const numberOfJobsPerCity = cities
+          .map(city => {
+            return {
+              name: city.name,
+              jobs: city.jobs.length,
+            };
+          })
+          .sort((a, b) => b.jobs - a.jobs);
+
+        const bestCities =
+          numberOfJobsPerCity.length > 3
+            ? numberOfJobsPerCity.slice(0, 4)
+            : numberOfJobsPerCity;
+
+        console.log(bestCities);
+        setTopCities(bestCities);
+      }
     },
     onError: error =>
       console.log(error, '<---get top cities by country query error'),
   });
+
+  useEffect(() => {
+    getTopCitiesByCountry({
+      variables: {
+        input: {
+          slug: countrySlug,
+        },
+      },
+    });
+  }, [countrySlug]);
 
   // ** ** ** ** ** Memoize ** ** ** ** **
   const values = React.useMemo(
@@ -171,14 +203,11 @@ export default function DataProvider(props) {
       setMyJobs,
       getJobs,
       allJobs,
-      setAllJobs,
       setCountrySlug,
       setCitySlug,
-      getRemotesByCity,
-      totalJobsInCity,
-      remoteJobsInCity,
       percentageRemote,
       percentageOnSite,
+      topCities,
     }),
     [
       getCountries,
@@ -192,14 +221,11 @@ export default function DataProvider(props) {
       setMyJobs,
       getJobs,
       allJobs,
-      setAllJobs,
       setCountrySlug,
       setCitySlug,
-      getRemotesByCity,
-      totalJobsInCity,
-      remoteJobsInCity,
       percentageRemote,
       percentageOnSite,
+      topCities,
     ],
   );
 

@@ -23,6 +23,7 @@ export default function BasicModal({
   description,
   applyUrl,
   favorites = false,
+  onPressRemove,
 }) {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {getHeight, radius} = ScaleHook();
@@ -86,8 +87,8 @@ export default function BasicModal({
   // ** ** ** ** ** ACTIONS ** ** ** ** **
   const onPressClose = () => setVisibility(false);
 
-  const onPressRemove = () => {
-    console.log('REMOVE');
+  const onPressRemoveJob = () => {
+    onPressRemove();
     setVisibility(false);
   };
 
@@ -122,7 +123,7 @@ export default function BasicModal({
         </TouchableOpacity>
         <Spacer height={20} />
         <TouchableOpacity
-          onPress={favorites ? onPressRemove : onPressClose}
+          onPress={favorites ? onPressRemoveJob : onPressClose}
           style={styles.linkTouch}>
           {favorites ? (
             <Text style={styles.closeText}>Remove from My Jobs</Text>

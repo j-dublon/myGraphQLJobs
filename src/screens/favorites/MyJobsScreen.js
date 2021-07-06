@@ -19,7 +19,7 @@ export default function MyJobsScreen() {
   // ** ** ** ** ** HOOKS ** ** ** ** **
   const {colors, textStyles} = useTheme();
   const {getHeight, getWidth, radius} = ScaleHook();
-  const {myJobs} = useData();
+  const {myJobs, setMyJobs} = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -34,6 +34,13 @@ export default function MyJobsScreen() {
   const onPressJob = index => {
     setCurrentJobIndex(index);
     setShowDetailsModal(true);
+  };
+
+  const removeJob = () => {
+    const remainingJobs = myJobs.filter(
+      (job, index) => index !== currentJobIndex,
+    );
+    setMyJobs(remainingJobs);
   };
 
   // ** ** ** ** ** STYLES ** ** ** ** **
@@ -118,6 +125,7 @@ export default function MyJobsScreen() {
               description={myJobs[currentJobIndex].description}
               applyUrl={myJobs[currentJobIndex].applyUrl}
               favorites={true}
+              onPressRemove={removeJob}
             />
           </>
         ) : (

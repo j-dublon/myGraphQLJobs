@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@apollo/client": "^3.3.19",
@@ -28,6 +29,7 @@
     "graphql": "^15.5.0",
     "graphql-tag": "^2.12.4",
     "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "quick-picker": "https://github.com/TheDistanceHQ/react-native-quickpicker/",
     "react": "17.0.1",
     "react-native": "0.64.0",

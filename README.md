@@ -16,13 +16,13 @@ XCode (12.5) is necessary to run this project on iOS, as is Android Studio (4.2)
 
 1. Clone the project: `git clone https://github.com/j-dublon/myGraphQLJobs.git`
 
-2. Install dependencies: `yarn`
+2. Navigate into the project, open, and install dependencies: `yarn`
 
 3. Install pods: `npx pod-install`
 
 4. Create a file `aws-exports.js` in the root of the project and add the AWS config data
 
-5. Run the command `patch-package` to apply project patches for `react-native-chart-kit` (without this the bar graph UI will not display correctly)
+5. Run the command `patch-package` to apply project patches for `react-native-chart-kit` (without this the bar chart UI will not display correctly)
 
 ---
 

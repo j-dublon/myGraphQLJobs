@@ -46,32 +46,29 @@ export default function DataProvider(props) {
     }
   }, [countryData, selectedCountry]);
 
-  // get country and city slugs when app first loads
+  // get country and city slugs
   const [countrySlug, setCountrySlug] = useState();
   const [citySlug, setCitySlug] = useState();
 
-  useEffect(() => {
-    const getCountryAndCity = async () => {
-      const {attributes} = await Auth.currentAuthenticatedUser();
-      const country = attributes['custom:country'];
-      if (country) {
-        const formattedCountry = country
-          .toLowerCase()
-          .split(' ')
-          .join('-');
-        setCountrySlug(formattedCountry);
-      }
-      const city = attributes['custom:city'];
-      if (city) {
-        const formattedCity = city
-          .toLowerCase()
-          .split(' ')
-          .join('-');
-        setCitySlug(formattedCity);
-      }
-    };
-    getCountryAndCity();
-  }, []);
+  const getCountryAndCity = async () => {
+    const {attributes} = await Auth.currentAuthenticatedUser();
+    const country = attributes['custom:country'];
+    if (country) {
+      const formattedCountry = country
+        .toLowerCase()
+        .split(' ')
+        .join('-');
+      setCountrySlug(formattedCountry);
+    }
+    const city = attributes['custom:city'];
+    if (city) {
+      const formattedCity = city
+        .toLowerCase()
+        .split(' ')
+        .join('-');
+      setCitySlug(formattedCity);
+    }
+  };
 
   // get all jobs in selected country when app first loads
   const [allJobs, setAllJobs] = useState([]);
@@ -135,7 +132,7 @@ export default function DataProvider(props) {
     }
   }, [remoteJobsInCity, totalJobsInCity]);
 
-  // get remote job data for user's city when app first loads and when location changed
+  // get remote job data for user's city when location changed
   useEffect(() => {
     if (citySlug) {
       getRemotesByCity({
@@ -171,7 +168,6 @@ export default function DataProvider(props) {
             ? numberOfJobsPerCity.slice(0, 4)
             : numberOfJobsPerCity;
 
-        console.log(bestCities);
         setTopCities(bestCities);
       }
     },
@@ -179,6 +175,7 @@ export default function DataProvider(props) {
       console.log(error, '<---get top cities by country query error'),
   });
 
+  // get top 3 cities for jobs by country for graph when country changed
   useEffect(() => {
     getTopCitiesByCountry({
       variables: {
@@ -208,6 +205,8 @@ export default function DataProvider(props) {
       percentageRemote,
       percentageOnSite,
       topCities,
+      getCountryAndCity,
+      getTopCitiesByCountry,
     }),
     [
       getCountries,
@@ -226,6 +225,8 @@ export default function DataProvider(props) {
       percentageRemote,
       percentageOnSite,
       topCities,
+      getCountryAndCity,
+      getTopCitiesByCountry,
     ],
   );
 

@@ -19,7 +19,17 @@ export default function HomeScreen() {
   const {colors, textStyles} = useTheme();
   const {getWidth, radius} = ScaleHook();
   const swiperRef = useRef();
-  const {allJobs, myJobs, setMyJobs, getCountries, getJobs} = useData();
+  const {
+    allJobs,
+    myJobs,
+    setMyJobs,
+    getCountries,
+    getJobs,
+    getCountryAndCity,
+    citySlug,
+    getTopCitiesByCountry,
+    countrySlug,
+  } = useData();
 
   // ** ** ** ** ** LOCAL ** ** ** ** **
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -28,7 +38,30 @@ export default function HomeScreen() {
   // ** ** ** ** ** EFFECTS ** ** ** ** **
   useEffect(() => {
     getCountries();
+    getCountryAndCity();
   }, []);
+
+  useEffect(() => {
+    if (citySlug) {
+      getRemotesByCity({
+        variables: {
+          input: {
+            slug: citySlug,
+          },
+        },
+      });
+    }
+  }, [citySlug]);
+
+  useEffect(() => {
+    getTopCitiesByCountry({
+      variables: {
+        input: {
+          slug: countrySlug,
+        },
+      },
+    });
+  }, [countrySlug]);
 
   // get all jobs on first app load, and when home tab focused (countrySlug not available from login)
   useFocusEffect(

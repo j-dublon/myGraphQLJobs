@@ -123,7 +123,7 @@ export default function TrendsScreen() {
       borderRadius: radius(10),
     },
     textContainer: {
-      marginTop: getHeight(70),
+      marginTop: selected === 'right' ? getHeight(75) : getHeight(50),
       alignItems: 'center',
       width: '80%',
       height: getHeight(100),

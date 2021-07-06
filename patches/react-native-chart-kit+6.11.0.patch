@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-chart-kit/dist/BarChart.js b/node_modules/react-native-chart-kit/dist/BarChart.js
-index 429d7d9..a52096e 100644
+index 429d7d9..2a6db9d 100644
 --- a/node_modules/react-native-chart-kit/dist/BarChart.js
 +++ b/node_modules/react-native-chart-kit/dist/BarChart.js
 @@ -112,10 +112,10 @@ var BarChart = /** @class */ (function (_super) {
@@ -26,7 +26,7 @@ index 429d7d9..a52096e 100644
            <G>
              {withVerticalLabels
 -            ? this.renderVerticalLabels(__assign(__assign({}, config), { labels: data.labels, paddingRight: paddingRight, paddingTop: paddingTop, horizontalOffset: barWidth * this.getBarPercentage() }))
-+            ? this.renderVerticalLabels(__assign(__assign({}, config), { labels: data.labels, paddingRight: 30, paddingTop: 7, horizontalOffset: barWidth * this.getBarPercentage() }))
++            ? this.renderVerticalLabels(__assign(__assign({}, config), { labels: data.labels, paddingRight: 30, paddingTop: paddingTop, horizontalOffset: barWidth * this.getBarPercentage() }))
              : null}
            </G>
            <G>

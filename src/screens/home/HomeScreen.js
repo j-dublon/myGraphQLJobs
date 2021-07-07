@@ -36,6 +36,7 @@ export default function HomeScreen() {
   const [currentJobIndex, setCurrentJobIndex] = useState(0);
 
   // ** ** ** ** ** EFFECTS ** ** ** ** **
+  // initial data calls on app first load
   useEffect(() => {
     getCountries();
     getCountryAndCity();
@@ -63,7 +64,7 @@ export default function HomeScreen() {
     });
   }, [countrySlug]);
 
-  // get all jobs on first app load, and when home tab focused (countrySlug not available from login)
+  // get all jobs on first app load, and when home tab focused after changing location (countrySlug not available from login)
   useFocusEffect(
     useCallback(() => {
       const getJobsFromCountry = async () => {
